@@ -1,0 +1,59 @@
+﻿@model AMStock.Core.Models.TransactionHeaderDTO
+
+@{
+    ViewBag.Title = @Model.TransactionNumber + " Details";
+}
+
+<h4>' @Model.TransactionNumber ' Transaction Detail</h4>
+<hr />
+
+<div class="form-inline">
+    <div class="form-group">
+        @Html.LabelFor(model => model.Warehouse.DisplayName, "Store")
+        @Html.TextBoxFor(model => model.Warehouse.DisplayName, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+
+    <div class="form-group">
+        @ViewData["BusinessPartnerType"]<br>
+        @Html.ActionLink(@Html.DisplayFor(model => model.BusinessPartner.DisplayName).ToString(), "Details", "BusinessPartner", new { id = Model.BusinessPartnerId, type = @ViewData["BpType"] }, new{ @Class="form-control", @style="width: 250px;"})
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.TransactionDate, "Transaction Date")
+        @Html.TextBoxFor(model => model.TransactionDateString, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.TransactionNumber)
+        @Html.TextBoxFor(model => model.TransactionNumber, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+
+
+</div>
+
+@*<p>
+    @Html.ActionLink("Back to List", "Index", new { type = @ViewData["TranType"] }, new { @Class = "btn btn-primary" })
+</p>*@
+
+<div class="clear-fix"></div>
+
+<div>
+
+    @{Html.RenderPartial("~/Views/Shared/PartialTemplates/TransactionItems.cshtml", ViewData["TranLines"]);}
+    <div class="float-right">
+        No Of Items: <i style="font-weight: bold;">@Model.CountLines</i> &nbsp;
+        Total Cost: <i style="font-weight: bold;">@Model.TotalCostString</i>
+    </div>
+   
+    <div class="clear-fix"></div>
+
+    @{Html.RenderPartial("~/Views/Shared/PartialTemplates/TransactionPayments.cshtml", ViewData["PaymentLines"]);}
+</div>
+
+
+
+
+<script type="text/javascript">
+    $('#tranmenu').addClass('active');
+</script>

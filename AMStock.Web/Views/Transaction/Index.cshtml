@@ -1,0 +1,240 @@
+﻿@using AMStock.Web.Models
+@model IEnumerable<AMStock.Core.Models.TransactionHeaderDTO>
+
+@{
+    ViewBag.Title = ViewData["TransactionType"];
+}
+@*<style scoped>
+    .chart-wrapper {
+        text-align: center;
+        width: 700px;
+        height: 340px;
+        margin:0 auto;
+    }
+    .chart-wrapper h3 {
+        padding: 1em 0;
+        font-size: 1.5em;
+        font-weight: normal;
+    }
+    .k-chart.small-chart {
+        display: inline-block;
+        width: 120px;
+        height: 120px;
+    }
+</style>*@
+
+<div style="text-align: center;">
+    <h4 style="font-size: 24px; font-weight: bold; color: orange; font-family: 'Bookman Old Style';"><i><b>SMART Trading PLC</b></i></h4>
+</div>
+<div class="clear-fix"></div>
+<div class="pull-left">
+    <h3>@ViewData["TransactionType"] (s)</h3>
+</div>
+
+<div class="pull-right hidden-print" style="margin-top: 20px;">
+    <i class="glyphicon glyphicon-search"></i>
+    <input class="input-sm" id="searchText" name="searchText" onkeydown="transactionSearch(this)" placeholder="Search @ViewData["TransactionType"] " style="width: 250px;" title="(by Transaction No. or @ViewData["BussinessPartnerType"] Name or TIN No.)" type="text" />
+</div>
+
+<div class="clear-fix"></div>
+
+<div class="form-inline">
+    <div class="form-group">
+        @Html.Label("Store")
+        @(Html.Kendo().DropDownList()
+              .Name("warehouseId")
+              .HtmlAttributes(new { style = "width: 250px" })
+              .DataTextField("Name")
+              .DataValueField("Id")
+              .Events(e => e.Change("wtpChange"))
+              .DataSource(source => source
+                  .Read(read => read.Action("GetWarehouses", "List"))
+                  .ServerFiltering(false))
+              )
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Tranaction Status")
+        @(Html.Kendo().DropDownList()
+              .Name("transactionType")
+              .Events(e => e.Change("wtpChange"))
+              .HtmlAttributes(new { style = "width: 250px" })
+              .BindTo((IEnumerable<SelectListItem>)ViewData["TransactionStatus"])
+              )
+    </div>
+    <div class="form-group">
+        @Html.Label("Payment Status")
+        @(Html.Kendo().DropDownList()
+              .Name("paymentStatus")
+              .Events(e => e.Change("wtpChange"))
+              .HtmlAttributes(new { style = "width: 250px" })
+              .BindTo((IEnumerable<SelectListItem>)ViewData["PaymentType"])
+              )
+    </div>
+</div>
+<div class="form-inline">
+    <div class="form-group">
+        @Html.Label("Begin Date")
+        @(Html.Kendo().DatePicker()
+              .Name("beginDate")
+              .Events(e => e.Change("wtpChange"))
+              .Format("dd MMM yyyy")
+              .Value(new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1))
+              .HtmlAttributes(new { style = "width: 250px" })
+              )
+    </div>
+    <div class="form-group">
+        @Html.Label("End Date")
+        @(Html.Kendo().DatePicker()
+              .Name("endDate")
+              .Events(e => e.Change("wtpChange"))
+              .Format("dd MMM yyyy")
+              .Value(DateTime.Now)
+              .HtmlAttributes(new { style = "width: 250px" })
+              )
+        @*DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month))*@
+    </div>
+</div>
+
+@{Html.RenderPartial("~/Views/Shared/_transaction.cshtml");}
+
+
+
+<div class="chart-wrapper">
+    @(Html.Kendo().Chart<TransactionViewModel>()
+          .Name("chart")
+          .Title("Daily Sales(Birr)")
+          .Legend(legend => legend
+              .Position(ChartLegendPosition.Bottom)
+          )
+          .DataSource(ds => ds.Read(read => read.Action("_DailySales", "Transaction")))
+          .Series(series =>
+          {
+              series.Column(model => model.Amount).Name("Amount").Color("#bb6e36");
+              //.Aggregate(ChartSeriesAggregate.Sum); 
+              //series.Column(model => model.NoOfItems).Name("NoOfItems");
+          })
+          .CategoryAxis(axis => axis
+              //.Date()
+              //.BaseUnit(ChartAxisBaseUnit.Days)
+              .Categories(model => model.DateOf)
+              .Labels(labels => labels.Rotation(-90))
+          //.MajorGridLines(lines => lines.Visible(false))
+          )
+          .ValueAxis(axis => axis
+              .Numeric()
+          //.Line(line => line.Visible(false))
+          )
+          //.ValueAxis(axis => axis.Numeric()
+          //    .Labels(labels => labels.Format("{0:N0}"))
+          //    .MajorUnit(1000)
+          //    .Line(line => line.Visible(false))
+          //)
+          .ChartArea(chartArea => chartArea
+              .Background("transparent")
+          )
+          .Tooltip(tooltip => tooltip
+              .Visible(true)
+              .Format("{0:N0}")
+              .Template("#= series.name #: #= value #")
+          )
+          ) 
+</div>
+<p>
+    on this page show pie chart of items in the transactions with their unit as a percentage
+</p>
+<div class="clear-fix"></div>
+@*Needs more exploration*@
+@*@(Html.Kendo().Chart<TransactionViewModel>()
+             .Name("chart2")
+                .Title(title => title
+                    .Text("Share of Internet Population Growth, 2007 - 2012")
+                    .Position(ChartTitlePosition.Bottom))
+        .Legend(legend => legend
+            .Visible(false)
+        )
+            .HtmlAttributes(new { @class = "small-chart" })
+            .Legend(legend => legend
+                .Visible(false)
+            )
+            .DataSource(ds =>
+            {
+                ds.Read(read => read.Action("_DailySales", "Transaction"));
+            }
+            )
+            .Series(series => series
+                    .Pie(model => model.DateOf, model => model.Amount.ToString(), model=>model.Color)
+                    .Padding(0)
+            )
+            .Tooltip(tooltip => tooltip
+                .Visible(true)
+                .Format("{0:N0}")
+                .Template("#= category # - #= kendo.format('{0:P}', percentage)#")
+            )
+        ) *@
+<style>
+    .displayb {
+        display: block;
+    }
+
+    .nodisplay {
+        display: none;
+    }
+</style>
+<script type="text/javascript">
+    $('#tranmenu').addClass('active');
+    $(document).ajaxStart(function() {
+        $("#spinner").show();
+    });
+    $(document).ajaxStop(function() {
+        $("#spinner").hide();
+    });
+
+    function transactionSearch(ele) {
+
+        if (event.keyCode == 13) {
+            var searchText = ele.value;
+            $.ajax({
+                type: "GET",
+                url: "/Transaction/Index",
+                data: { 'searchText': searchText,'type': @ViewData["TranType"] },
+                contentType: false,
+                async: true,
+                success: function(inventoryList) {
+                    $("#table_id").replaceWith(inventoryList);
+                },
+                error: function() {
+                    alert("Sorry, there was a problem!");
+                }
+            });
+        }
+    }
+
+    function wtpChange() {
+        var searchText = $("#searchText").val();
+        var warehouseId = $("#warehouseId").data("kendoDropDownList").value();
+        var transactionType = $("#transactionType").data("kendoDropDownList").value();
+        var paymentStatus = $("#paymentStatus").data("kendoDropDownList").value();
+
+        var beginDate =kendo.toString($("#beginDate").data("kendoDatePicker").value(), 'd') ;
+        var endDate = kendo.toString($("#endDate").data("kendoDatePicker").value(), 'd') ;
+        //alert(beginDate + "\n" + endDate+ "\n" + warehouseId+ "\n" + transactionType+ "\n" + paymentStatus);
+        $.ajax({
+            type: "GET",
+            url: "/Transaction/Index",
+            data: {'warehouseId': warehouseId, 'transactionType': transactionType, 
+                'paymentStatus': paymentStatus,'searchText':searchText,
+                'beginDate': beginDate, 'endDate': endDate,
+                'type': @ViewData["TranType"]},
+            contentType: false,
+            async: true,
+            success: function(inventoryList) {
+                $("#table_id").replaceWith(inventoryList);
+            },
+            error: function() {
+                alert("Sorry, there was a problem!");
+            }
+        });
+    }
+    
+</script>

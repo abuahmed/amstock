@@ -1,0 +1,104 @@
+﻿@model AMStock.Core.Models.BusinessPartnerDTO
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h4>' @Model.DisplayName ' Detail</h4>
+<hr />
+
+<div class="form-inline">
+    <div class="form-group">
+        @Html.LabelFor(model => model.DisplayName, "Full Name")
+        @Html.TextBoxFor(model => model.DisplayName, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.TinNumber)
+        @Html.TextBoxFor(model => model.TinNumber, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+    @*<div class="form-group">
+        @Html.LabelFor(model => model.ContactName)
+        @Html.TextBoxFor(model => model.ContactName, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ContactTitle)
+        @Html.TextBoxFor(model => model.ContactTitle, new { @class = "form-control", @disabled = "disabled" })
+    </div>*@
+</div>
+
+<div class="form-inline">
+    <div class="form-group ">
+        @Html.LabelFor(model => model.TotalCreditString, "Outstanding Credit")
+        @Html.TextBoxFor(model => model.TotalCreditString, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CreditLimit)
+        @Html.TextBoxFor(model => model.CreditLimit, new {@id="CreditLimit2", @class = "form-control", @disabled = "disabled" })
+    </div>
+</div>
+
+<div class="form-inline">
+    <div class="form-group ">
+        @Html.LabelFor(model => model.TotalNoOfOutstandingTransactions, "Outstanding Transactions")
+        @Html.TextBoxFor(model => model.TotalNoOfOutstandingTransactions, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.MaxNoCreditTransactions)
+        @Html.TextBoxFor(model => model.MaxNoCreditTransactions, new {@id="MaxNoCreditTransactions2", @class = "form-control", @disabled = "disabled" })
+    </div>
+
+    <div class="form-group">
+        @Html.Label(" ")
+        <a class="btn btn-primary form-control" data-toggle="modal" 
+           href="/BusinessPartner/CreditLimit/@Model.Id" data-target="#feedback">
+            <i class="glyphicon glyphicon-edit"></i> Change Credit Limit
+        </a>
+    </div>
+</div>
+
+<h4>Address</h4>
+@*<div class="form-inline">
+    <div class="form-group">
+        @Html.LabelFor(model => model.Address.Country)
+        @Html.TextBoxFor(model => model.Address.Country, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Address.City)
+        @Html.TextBoxFor(model => model.Address.City, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Address.StreetAddress)
+        @Html.TextBoxFor(model => model.Address.StreetAddress, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Address.Telephone)
+        @Html.TextBoxFor(model => model.Address.Telephone, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Address.Mobile)
+        @Html.TextBoxFor(model => model.Address.Mobile, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Address.PoBox)
+        @Html.TextBoxFor(model => model.Address.PoBox, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Address.Fax)
+        @Html.TextBoxFor(model => model.Address.Fax, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+</div>*@
+
+<div id="feedback" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+     data-url="@Url.Action("CreditLimit", new { id = @Model.Id })" >
+</div>
+
+<script type="text/javascript">
+    $('#bpmenu').addClass('active');
+</script>

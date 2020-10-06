@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{64C8A0F9-F818-46F2-A485-A8306EB01BA1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AMStock.Core</RootNamespace>
+    <AssemblyName>AMStock.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>AppIcon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AMStock.DAL">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\AmihanIT\AMStock\AMStock.DAL.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>E:\amihanit.com\dev\AmTicketSale\MATS.Repository\bin\Debug\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>E:\amihanit.com\dev\AmTicketSale\MATS.Repository\bin\Debug\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServerCompact">
+      <HintPath>E:\amihanit.com\dev\AmTicketSale\MATS.Repository\bin\Debug\EntityFramework.SqlServerCompact.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject">
+      <HintPath>E:\amihanit.com\dev\AmTicketSale\MATS.Repository\bin\Debug\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CommonUtility.cs" />
+    <Compile Include="Common\CommonFieldsC.cs" />
+    <Compile Include="Common\CommonFieldsD.cs" />
+    <Compile Include="Common\CommonFieldsE.cs" />
+    <Compile Include="Common\ListDataItem.cs" />
+    <Compile Include="Common\SearchCriteria.cs" />
+    <Compile Include="Common\TransactionLineDetail.cs" />
+    <Compile Include="Common\Crypto.cs" />
+    <Compile Include="Common\EmailDTO.cs" />
+    <Compile Include="Common\UserRolesModel.cs" />
+    <Compile Include="CustomValidationAttributes\ExcludeChar.cs" />
+    <Compile Include="CustomValidationAttributes\GreaterThanZero.cs" />
+    <Compile Include="CustomValidationAttributes\Unqiue.cs" />
+    <Compile Include="EntityBase.cs" />
+    <Compile Include="Enumerations\AddressTypes.cs" />
+    <Compile Include="Enumerations\AMStockEdition.cs" />
+    <Compile Include="Enumerations\BusinessPartnerCategory.cs" />
+    <Compile Include="Enumerations\BusinessPartnerTypes.cs" />
+    <Compile Include="Enumerations\CityList.cs" />
+    <Compile Include="Enumerations\ClientTypes.cs" />
+    <Compile Include="Enumerations\CountryList.cs" />
+    <Compile Include="Enumerations\GoodsMovementTypes.cs" />
+    <Compile Include="Enumerations\ItemBorrowTypes.cs" />
+    <Compile Include="Enumerations\PhysicalInventoryStatus.cs" />
+    <Compile Include="Enumerations\UserTypes.cs" />
+    <Compile Include="Enumerations\RoleTypes.cs" />
+    <Compile Include="Enumerations\NameTypes.cs" />
+    <Compile Include="Enumerations\PaymentEnums.cs" />
+    <Compile Include="Enumerations\TaxTypes.cs" />
+    <Compile Include="Enumerations\TransactionStatus.cs" />
+    <Compile Include="Enumerations\TransactionTypes.cs" />
+    <Compile Include="Enumerations\LogMethod.cs" />
+    <Compile Include="Extensions\EnumerationExtension.cs" />
+    <Compile Include="Models\AddressDTO.cs" />
+    <Compile Include="Common\CommonFieldsA.cs" />
+    <Compile Include="Models\BankGuaranteeDTO.cs" />
+    <Compile Include="Models\BuildVersionDTO.cs" />
+    <Compile Include="Models\BusinessPartnerAddressDTO.cs" />
+    <Compile Include="Models\BusinessPartnerContactDTO.cs" />
+    <Compile Include="Models\CheckDTO.cs" />
+    <Compile Include="Models\BusinessPartnerDTO.cs" />
+    <Compile Include="Models\ErrorLogDTO.cs" />
+    <Compile Include="Models\ItemsMovementHeaderDTO.cs" />
+    <Compile Include="Models\ItemsMovementLineDTO.cs" />
+    <Compile Include="Models\OrganizationDTO.cs" />
+    <Compile Include="Models\PaymentModel.cs" />
+    <Compile Include="Models\TransactionLineDTO.cs" />
+    <Compile Include="Models\TransactionHeaderDTO.cs" />
+    <Compile Include="Models\FinancialAccountDTO.cs" />
+    <Compile Include="Models\ClientDTO.cs" />
+    <Compile Include="Models\ItemBorrowDTO.cs" />
+    <Compile Include="Models\PaymentClearanceDTO.cs" />
+    <Compile Include="Models\SmtpServerDTO.cs" />
+    <Compile Include="Models\ContactDTO.cs" />
+    <Compile Include="Models\CategoryDTO.cs" />
+    <Compile Include="Common\CommonFieldsB.cs" />
+    <Compile Include="Models\CpoDTO.cs" />
+    <Compile Include="Models\Interfaces\IPaymentDTO.cs" />
+    <Compile Include="Models\Interfaces\IObjectState.cs" />
+    <Compile Include="Common\PaymentTransaction.cs" />
+    <Compile Include="Models\PaymentDTO.cs" />
+    <Compile Include="Models\PhysicalInventoryHeaderDTO.cs" />
+    <Compile Include="Models\PhysicalInventoryLineDTO.cs" />
+    <Compile Include="Models\ItemDTO.cs" />
+    <Compile Include="Models\ItemQuantityDTO.cs" />
+    <Compile Include="Models\ProductActivationDTO.cs" />
+    <Compile Include="Models\RoleDTO.cs" />
+    <Compile Include="Models\SalesPersonDTO.cs" />
+    <Compile Include="Models\SettingDTO.cs" />
+    <Compile Include="Common\TransactionLine.cs" />
+    <Compile Include="Models\UserDTO.cs" />
+    <Compile Include="Models\WarehouseDTO.cs" />
+    <Compile Include="ObjectState.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyChangeNotification.cs" />
+    <Compile Include="ReportUtility.cs" />
+    <Compile Include="Singleton.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AppIcon.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

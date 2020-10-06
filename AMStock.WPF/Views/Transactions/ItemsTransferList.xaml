@@ -1,0 +1,158 @@
+﻿<Window x:Class="AMStock.WPF.Views.ItemsTransferList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+        AllowDrop="True"
+        Title="Stock Transfer Item List" Height="650" Width="860" x:Name="WdwItemsTransferList"
+        Background="Transparent" AllowsTransparency="False" WindowStyle="ThreeDBorderWindow"
+        DataContext="{Binding ItemsTransferList, Source={StaticResource Locator}}"
+        WindowStartupLocation="CenterScreen" Closing="ItemsTransferList_OnClosing"
+        Icon="/AMStock.WPF;component/Resources/AppIcon.ico">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/MainSkin.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ControlsDictionary.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ListViewDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Border Style="{StaticResource mainBorder}" CornerRadius="0">
+            <Grid TextBlock.Foreground="White" TextBlock.FontSize="13" TextBlock.FontFamily="Bookman Old Style">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+
+                <Expander Grid.Row="1" Margin="5,0" Header="Filter List" Foreground="White" IsExpanded="True">
+                    <Grid Margin="5,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!--<TextBlock  Grid.Row="0" Grid.Column="0" Text="From Store:"
+                                     Style="{StaticResource textBlockStyle1}"/>
+                        <ComboBox   Grid.Row="0" Grid.Column="1" 
+                                    x:Name="CmbFromWarehouse" 
+                                    ItemsSource="{Binding Warehouses, Mode= OneWay}"
+                                    SelectedItem="{Binding SelectedFromWarehouse}"                                       
+                                    DisplayMemberPath="DisplayName"
+                                    Style="{StaticResource comboBoxStyle1}"/>
+                        
+                        <TextBlock  Grid.Row="0" Grid.Column="2" Text="To Store:"
+                                     Style="{StaticResource textBlockStyle1}"/>
+                        <ComboBox   Grid.Row="0" Grid.Column="3" 
+                                    x:Name="CmbToWarehouse" 
+                                    ItemsSource="{Binding Warehouses, Mode= OneWay}"
+                                    SelectedItem="{Binding SelectedToWarehouse}"                                       
+                                    DisplayMemberPath="DisplayName"
+                                    Style="{StaticResource comboBoxStyle1}"/>
+                        
+                        <TextBlock  Text="Category" Grid.Row="0" Grid.Column="4" 
+                                Style="{StaticResource textBlockStyle1}"/>
+                        <ComboBox   Grid.Row="0" Grid.Column="5" 
+                                    x:Name="CmbSelectedCategory" 
+                                    ItemsSource="{Binding Categories, Mode= OneWay}"
+                                    SelectedItem="{Binding SelectedCategory}"                                       
+                                    DisplayMemberPath="DisplayName"
+                                    Style="{StaticResource comboBoxStyle1}"/>-->
+                        
+                        <TextBlock Text="From:" Grid.Row="1" Grid.Column="2"  
+                               Style="{StaticResource textBlockStyle1}"/>
+                        <DatePicker  Grid.Row="1" Grid.Column="3"
+                                            x:Name="DtFromDate" 
+                                            SelectedDate="{Binding FilterStartDate}" 
+                                            Margin="0,5"  
+                                            VerticalAlignment="Center"/>
+
+                        <TextBlock Text="To:" Grid.Column="4" Grid.Row="1" HorizontalAlignment="Left"
+                               Style="{StaticResource textBlockStyle1}"/>
+                        <DatePicker Grid.Row="1" Grid.Column="5" 
+                                            x:Name="DtToDate" 
+                                            SelectedDate="{Binding FilterEndDate}" 
+                                            Margin="0,5"   
+                                            VerticalAlignment="Center"/>
+
+                        <!--<TextBlock  Text="Item" Grid.Row="1" Grid.Column="0" 
+                                Style="{StaticResource textBlockStyle1}"/>
+                        <telerik:RadAutoCompleteBox x:Name="LstTransactionsNumberAutoCompleteBox" Grid.Row="1" Grid.Column="1" Margin="5" 
+                                                                ItemsSource="{Binding Items, Mode=TwoWay}"
+                                                                SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                                                                HorizontalAlignment="Stretch" 
+                                                                VerticalAlignment="Center"
+                                                                WatermarkContent="item"
+											                    TextSearchMode="Contains"
+											                    AutoCompleteMode="Suggest"
+											                    SelectionMode="Single"
+											                    TextSearchPath="ItemDetail"											                
+											                    BorderBrush="#FF25A0DA" 
+                                                                BorderThickness="1"/>-->
+
+                        <StackPanel Orientation="Horizontal" Grid.Column="6" Grid.Row="1">
+                        <telerik:RadButton  Content="Show List" 
+                                     Command="{Binding RefreshCommand}" Margin="3,2" />
+                        
+                        <telerik:RadButton  Content="Export"  
+                                     Command="{Binding ExportToExcelCommand}" Margin="3,2" />
+                        </StackPanel>
+                    </Grid>
+                </Expander>
+
+                <ListView Grid.Row="2" x:Name="ListView"
+                                      ItemContainerStyle="{StaticResource GridViewItem}" 
+                                      SelectedItem="{Binding SelectedTransactionLine}"
+                                      ItemsSource="{Binding TransactionLines}" >
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="true" ColumnHeaderContainerStyle="{StaticResource GridViewHeader}">
+                            <GridViewColumn Header="From (Origin)" DisplayMemberBinding="{Binding ItemsMovementHeader.FromWarehouse.DisplayNameShort}" Width="70"/>
+                            <GridViewColumn Header="To (Destination)" DisplayMemberBinding="{Binding ItemsMovementHeader.ToWarehouse.DisplayNameShort}" Width="70"/>
+                            <GridViewColumn Header="Date" DisplayMemberBinding="{Binding ItemsMovementHeader.MovementDateString}" Width="auto"/>
+                            <GridViewColumn Header="Number" DisplayMemberBinding="{Binding ItemsMovementHeader.MovementNumber}" Width="auto"/>
+                            <GridViewColumn Header="Item Code" DisplayMemberBinding="{Binding Item.ItemCode}" Width="auto"/>
+                            <!--<GridViewColumn Header="Item Name" DisplayMemberBinding="{Binding Item.DisplayName}"  Width="120" />-->
+                            <GridViewColumn Header="Origin Previous Qty." DisplayMemberBinding="{Binding OriginPreviousQuantity}" Width="auto"/>
+                            <GridViewColumn Header="Destination Prev. Qty." DisplayMemberBinding="{Binding DestinationPreviousQuantity}" Width="auto"/>
+                            <GridViewColumn Header="Moved Qty." DisplayMemberBinding="{Binding MovedQuantity}" Width="auto" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+                <GridSplitter Grid.Row="4" ResizeDirection="Rows" HorizontalAlignment="Stretch" Height="3"/>
+                <Grid Grid.Row="5">
+                    <StackPanel Margin="10,5"  Orientation="Horizontal" HorizontalAlignment="Right"
+                                TextBlock.Foreground="Black" 
+                                TextBlock.FontFamily="Bookman Old Style" 
+                                TextBlock.FontSize="12" 
+                                TextBlock.FontWeight="Normal">
+                        <StackPanel Orientation="Horizontal" >
+                            <TextBlock  Text="Total Items: " VerticalAlignment="Center" />
+                            <TextBlock FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Text="{Binding TotalNumberOfRows}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="25,0">
+                            <TextBlock  Text="Total Quantities: " VerticalAlignment="Center" />
+                            <TextBlock FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Text="{Binding TotalNumberOfTransaction}"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                </Grid>
+
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

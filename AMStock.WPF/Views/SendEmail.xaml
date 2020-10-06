@@ -1,0 +1,121 @@
+﻿<Window x:Class="AMStock.WPF.Views.SendEmail"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:local="clr-namespace:AMStock.Core.Extensions;assembly=AMStock.Core"
+        xmlns:Model="clr-namespace:AMStock.Core.Enumerations;assembly=AMStock.Core"
+        xmlns:vm="clr-namespace:AMStock.WPF.ViewModel"             
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:commands="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF4" 
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation" 
+        mc:Ignorable="d" 
+        Title="Send Email" Height="440" Width="520" x:Name="wdwSendEmail"
+        DataContext="{Binding SendEmail, Source={StaticResource Locator}}"
+        Background="Transparent" AllowsTransparency="True" WindowStyle="None" Closing="SendEmail_OnClosing"
+        WindowStartupLocation="CenterScreen" Icon="/AMStock.WPF;component/Resources/AppIcon.ico">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/MainSkin.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ControlsDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="Expander">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontFamily" Value="Bookman Old Style"/>
+                <Setter Property="FontSize" Value="14"/>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Border Style="{StaticResource mainBorder}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="3"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0">
+                    <Button x:Name="btnClose" 
+                            Style="{StaticResource closeWindowButtons}"
+                            IsCancel="True"/>
+
+                    <TextBlock Text="Send Email" FontSize="18" Margin="5,-20,0,0"
+                           Style="{StaticResource windowTextBlockHeader}"  />
+                </StackPanel>
+
+                <Grid Grid.Row="1" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Expander Grid.Row="0" Header="Email Header" IsExpanded="True">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="To: " VerticalAlignment="Center"/>
+                            <TextBox  InputLanguageManager.InputLanguage="en-US" x:Name="txtYearCompleted" Grid.Row="0" Grid.Column="1" Margin="0,5,0,5" 
+                                 ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=txtYearCompleted}" 
+                                 Text="{Binding EmailDetail.Recepient, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                 Validation.Error="Validation_Error"  />
+                                                        
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Subject: " VerticalAlignment="Center"/>
+                            <TextBox  InputLanguageManager.InputLanguage="en-US" x:Name="txtFieldOfStudy" Grid.Row="2" Grid.Column="1" Margin="0,5,0,5" 
+                                 ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=txtFieldOfStudy}" 
+                                 Text="{Binding EmailDetail.Subject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                 Validation.Error="Validation_Error"  />
+                        </Grid>
+                    </Expander>
+                    <Expander Grid.Row="1" Header="Email Message" IsExpanded="True">
+                        <TextBox  InputLanguageManager.InputLanguage="en-US" x:Name="txtEmailMessage" Grid.Row="2" Grid.Column="1" Margin="5" 
+                                 ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=txtEmailMessage}" 
+                                 Text="{Binding EmailDetail.Body, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                 Validation.Error="Validation_Error"  />
+                    </Expander>
+                    <Expander Grid.Row="2" Header="Attachments" IsExpanded="True">
+                        <Grid>
+                        <StackPanel Orientation="Horizontal" Margin="5">                                
+                                <TextBlock Text="{Binding EmailAttachmentDetail}" FontSize="14" />                                
+                            </StackPanel>
+                        </Grid>
+                        
+                    </Expander>
+                </Grid>
+
+                <GridSplitter Grid.Row="2" Height="3" HorizontalAlignment="Stretch" />
+
+                <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Top" Margin="0,5,0,5" HorizontalAlignment="Right">
+                    <Button Content="_Send" 
+                            Command="{Binding SendEmailCommand}" 
+                            x:Name="btnSaveClose" 
+                            CommandParameter="{Binding ElementName=wdwSendEmail}" 
+                            Height="30" 
+                            Padding="10,0" 
+                            Margin="10,0,0,0" 
+                            IsDefault="True"/>
+
+                    <Button Content="_Close" 
+                            IsCancel="True"
+                            CommandParameter="{Binding ElementName=wdwSendEmail}" 
+                            Padding="10,0" 
+                            Height="30" 
+                            Margin="10,0,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
+
+
+

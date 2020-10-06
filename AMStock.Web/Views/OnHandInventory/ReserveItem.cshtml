@@ -1,0 +1,141 @@
+﻿@model AMStock.Core.Models.ItemQuantityDTO
+
+<style>
+    .modal-content {
+        background-image: url(/Images/bg.png);
+        font-family: 'Bookman Old Style';
+    }
+
+    .modal-dialog {
+        left: 0;
+    }
+
+    .page-header {
+        margin: 10px 0 10px;
+    }
+
+    .modal-header {
+        padding: 1px;
+    }
+
+    .modal-footer {
+        padding: 1px;
+    }
+
+</style>
+
+<script type="text/javascript">
+   $("form").submit(function (e) {
+
+        if (!$(this).valid()) {
+            e.preventDefault();
+        }
+        else {
+            var params = new Object();
+            params.iqId = $("#Id").val();
+            params.quantityReserved = $("#QuantityReserved").val();
+            params.soQuantityReserved = $("#MaxCustomerQuantity").val();
+            params.onDate = kendo.toString($("#ReservedOnDate").val(),'d');
+
+            $.ajax({
+                type: "POST",
+                url: "/OnHandInventory/SaveItemReservation/",
+                beforeSend: function () { $('#loadingDiv').show(); },
+                complete: function () { $('#loadingDiv').hide(); },
+                data: JSON.stringify(params),
+                contentType: "application/json",
+                async: false,
+                success: function (successfull) {
+                    if (!successfull) {
+                        alert("Problem Occured while Adding Reservation, Please try Again!");
+                        e.preventDefault();
+                    }
+                },
+                error: function () {
+                    alert("Problem Occured while Adding Reservation, Please try Again!");
+                    e.preventDefault();
+                }
+            });
+            return true;
+        } return true;
+    });
+</script>
+
+<div style="padding: 10px;" class="modal-content modal-dialog modal-body">
+ 
+    <form method="post" id="reserve">
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.ItemId)
+        @Html.HiddenFor(model => model.WarehouseId)
+
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 id="myModalLabel">' @Model.Item.DisplayName ' Reservation</h4>
+        </div>
+
+        <div class="form-inline">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Warehouse.DisplayName, "Store")
+                @Html.TextBoxFor(model => model.Warehouse.DisplayName, new { @class = "form-control input-large h3", @readonly = "true" })
+                @Html.ValidationMessageFor(model => model.Warehouse.DisplayName)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Item.ItemCode, "Item Code")
+                @Html.TextBoxFor(model => model.Item.ItemCode, new { @class = "form-control input-large h3", @readonly = "true" })
+                @Html.ValidationMessageFor(model => model.Item.ItemCode)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.QuantityAvailable, "Quantity Available")
+                @Html.TextBoxFor(model => model.QuantityAvailable, new { @class = "form-control input-large h3", @readonly = "true" })
+                @Html.ValidationMessageFor(model => model.QuantityAvailable)
+            </div>
+        </div>
+        
+        <div class="form-inline">
+            <div class="form-group">
+                @Html.LabelFor(model => model.QuantityReserved, "Quantity Reserved")
+                @Html.TextBoxFor(model => model.QuantityReserved, new { @class = "form-control input-large h3" })
+                @Html.ValidationMessageFor(model => model.QuantityReserved)
+            </div>
+          
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReservedOnDate, "Reservation Date")
+                @(Html.Kendo().DateTimePickerFor(model => model.ReservedOnDate)
+                  .HtmlAttributes(new { @style = "width:250px;" })
+                  .Value(DateTime.Now)
+                  .Min(DateTime.Now)
+                  .Format("dd-MMMM-yyyy  HH:mm"))
+                @Html.ValidationMessageFor(model => model.ReservedOnDate)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.MaxCustomerQuantity, "Max. Customer Qty.")
+                @Html.TextBoxFor(model => model.MaxCustomerQuantity, new { @class = "form-control input-large h3" })
+                @Html.ValidationMessageFor(model => model.MaxCustomerQuantity)
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+        <div class="pull-left">
+            <div id='loadingDiv'>
+                Please wait... <img src="~/Images/loading-image.gif" />
+            </div>
+        </div>
+        
+            <div class="pull-right ">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                <input type="submit" id="reserveItem2" value="Reserve Item" class="btn btn-warning active" />
+            </div>
+        </div>
+    </form>
+
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#reserve");
+        $('#loadingDiv').hide();
+    });
+</script>

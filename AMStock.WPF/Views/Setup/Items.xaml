@@ -1,0 +1,288 @@
+﻿<Window x:Class="AMStock.WPF.Views.Items"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+        mc:Ignorable="d" 
+        Title="Items List and Entry" Height="600" Width="600" 
+        WindowStartupLocation="CenterScreen" Margin="0,20,0,0" 
+        DataContext="{Binding Item, Source={StaticResource Locator}}"
+        Background="Transparent" AllowsTransparency="False" WindowStyle="ThreeDBorderWindow" 
+        Icon="/AMStock.WPF;component/Resources/AppIcon.ico" 
+        Loaded="Window_Loaded" Closing="Window_Closing">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/MainSkin.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ControlsDictionary.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ListViewDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
+    </Window.Resources>
+
+    <Grid x:Name="LayoutRoot">
+        <Border Style="{StaticResource mainBorder}" CornerRadius="0"
+                TextBlock.FontFamily="Bookman old style" TextBlock.Foreground="White">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <!--Header Begin-->
+                <!--<StackPanel Grid.Row="0">
+                    <telerik:RadButton x:Name="btnClose" 
+                            Style="{StaticResource closeWindowtelerik:RadButtons}" 
+                            IsCancel="True"/>
+
+                    <TextBlock Text="Items List" 
+                           Style="{StaticResource windowTextBlockHeader}"  />
+                    <Separator Background="White" Margin="5,0,15,0"/>
+                </StackPanel>-->
+                <StackPanel Grid.Row="1" Margin="5,0"
+                            Orientation="Horizontal"  HorizontalAlignment="Right"
+                            Background="Transparent">
+                    <TextBlock  Text="Category "
+                                    Style="{StaticResource textBlockStyle1}"/>
+                    <ComboBox Text="For Store:"
+                                    x:Name="CmbSelectedCategory" 
+                                    ItemsSource="{Binding CategoriesForSearch, Mode= OneWay}"
+                                    SelectedItem="{Binding SelectedCategoryForSearch}"                                       
+                                    DisplayMemberPath="DisplayName" Width="120" HorizontalAlignment="Left"
+                                    Style="{StaticResource comboBoxStyle1}" Margin="5,2,5,0" VerticalAlignment="Top"/>
+                   
+                    
+                    <TextBlock  Text="Search " 
+                            Style="{StaticResource textBlockStyle1}"/>
+
+                    <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
+                             Style="{StaticResource searchTextBox}" Width="200" Margin="10,5"/>
+                    
+                    <telerik:RadButton Margin="0,0,5,0" Height="30" 
+                                    IsEnabled="True"
+                                    Content=" Show List" 
+                                    Command="{Binding RefreshListCommand}" />
+                </StackPanel>
+                <!--Header End-->
+
+                <Grid Grid.Row="2">
+
+                    <Grid Margin="2,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="2"/>
+                            <RowDefinition Height="40"/>
+                        </Grid.RowDefinitions>
+
+                        <ListView x:Name="ItemListView" Grid.Row="1"
+                                  ItemContainerStyle="{StaticResource GridViewItem}" 
+                                  SelectedItem="{Binding SelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"                            
+                                  ItemsSource="{Binding Items,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="true" ColumnHeaderContainerStyle="{StaticResource GridViewHeader}">
+                                    <GridViewColumn Header="Code" DisplayMemberBinding="{Binding ItemCode}" Width="auto"/>
+                                    <!--<GridViewColumn Header="Name" DisplayMemberBinding="{Binding DisplayName}"  Width="250"/>-->
+                                    <GridViewColumn Header="Category" DisplayMemberBinding="{Binding Category.DisplayName, Mode=OneWay}"  Width="auto"/>
+                                    <GridViewColumn Header="Unit Measure" DisplayMemberBinding="{Binding UnitOfMeasure.DisplayName, Mode=OneWay}"  Width="auto"/>
+                                    <!--<GridViewColumn Header="Purhase Price" DisplayMemberBinding="{Binding PurchasePrice}" Width="auto"/>
+                                    <GridViewColumn Header="Sale Price" DisplayMemberBinding="{Binding SellPrice}" Width="auto"/>
+                                    <GridViewColumn Header="Safe Qty." DisplayMemberBinding="{Binding SafeQuantity}" Width="auto"/>-->
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                        <Expander TextBlock.Foreground="White" Grid.Row="2" 
+                                  Header="Item Detail" 
+                                  Margin="0" IsExpanded="True">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="5"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid Grid.Column="0" Margin="10" >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Item Code:" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" 
+                                             x:Name="TxtItemCode"                                 
+                                             ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtItemCode}" 
+                                             Text="{Binding SelectedItem.ItemCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                             Validation.Error="Validation_Error"
+                                             Margin="0,4" CharacterCasing="Upper"/>
+
+                                    <!--<TextBlock Grid.Row="0" Grid.Column="2" Text="Item Name:" VerticalAlignment="Center" Margin="5,0"/>
+                                    <TextBox Grid.Row="0" Grid.Column="3" 
+                                             x:Name="TxtItemName" 
+                                             Focusable="True" 
+                                             ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtItemName}" 
+                                             Text="{Binding SelectedItem.DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                             Validation.Error="Validation_Error"
+                                             Margin="0,4" />-->
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Category:" VerticalAlignment="Center"/>
+                                    <Grid Grid.Row="1" Grid.Column="1" Margin="0,2" >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <ComboBox ItemsSource="{Binding Categories, Mode=OneWay}"  
+                                                  DisplayMemberPath="DisplayName" Background="Transparent"
+                                                  SelectedItem="{Binding SelectedCategory}" 
+                                                  VerticalContentAlignment="Center" SelectedIndex="0"
+                                                   />
+                                        <telerik:RadButton x:Name="BtnAddNewCategory"  Grid.Column="1"
+                                                Content=" + " FontSize="14" Width="30"
+                                                Command="{Binding AddNewCategoryCommand}" 
+                                                FontWeight="ExtraBold" Margin="0,0,0,0" ToolTip="Add New Category"/>
+                                    </Grid>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="2" Text="UOM:" VerticalAlignment="Center" Margin="5,0"/>
+                                    <Grid Grid.Row="1" Grid.Column="3" Margin="0,2" >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <ComboBox  
+                                                    ItemsSource="{Binding UnitOfMeasures,Mode=OneWay}" 
+                                                    DisplayMemberPath="DisplayName" Background="Transparent"
+                                                    SelectedItem="{Binding SelectedUnitOfMeasure}"
+                                                    VerticalContentAlignment="Center" SelectedIndex="0"/>
+                                                    
+                                        <telerik:RadButton x:Name="BtnAddNewUOm" Grid.Column="1" 
+                                                Content="  + " FontSize="14" Width="30"
+                                                Command="{Binding AddNewUomCommand}" 
+                                                FontWeight="ExtraBold" Margin="0,0,0,0" ToolTip="Add New Unit Of Measure"/>
+                                    </Grid>
+
+                             
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Purchase Price:" VerticalAlignment="Center" />
+                                    <TextBox Grid.Row="2" Grid.Column="1"
+                                                 x:Name="TxtPurchasePrice"
+                                                 ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtPurchasePrice}" 
+                                                 Text="{Binding SelectedItem.PurchasePrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                                 Validation.Error="Validation_Error"
+                                                 Margin="0,4" TextAlignment="Right" />
+                                    
+                                    <TextBlock Grid.Row="2" Grid.Column="2" Text="Sale Price:" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="2" Grid.Column="3" 
+                                                 x:Name="TxtSellPrice"
+                                                 ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtSellPrice}" 
+                                                 Text="{Binding SelectedItem.SellPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                                 Validation.Error="Validation_Error"
+                                                 Margin="0,4" TextAlignment="Right"/>
+
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Description:" 
+                                               TextWrapping="Wrap"
+                                               VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Grid.RowSpan="1"
+                                             TextWrapping="Wrap" 
+                                             Text="{Binding SelectedItem.Description}"  
+                                             Margin="0,5" />
+
+                                </Grid>
+
+                                <!--<GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" IsEnabled="False" Focusable="False" />-->
+
+                                <Grid Grid.Column="2">
+                                    <Grid Margin="5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="AUTO"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                        </Grid.RowDefinitions>
+                                        <!--More Data-->
+
+                     
+
+                                        <!--
+
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Safe Qty.:" VerticalAlignment="Center"/>
+                                        <TextBox  Grid.Row="2" Grid.Column="1"
+                                                  x:Name="TxtSafeQuantity"
+                                                  ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtSafeQuantity}" 
+                                                  Text="{Binding SelectedItem.SafeQuantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                                  Validation.Error="Validation_Error"
+                                                  Margin="0,4" TextAlignment="Right" />-->
+
+                                        <!--<TextBlock Grid.Row="3" Grid.Column="0" Text="Discount:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="3" Grid.Column="1" 
+                                                 x:Name="txtDiscount"
+                                                 ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=txtDiscount}" 
+                                                 Text="{Binding SelectedItem.Discount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                                 Validation.Error="Validation_Error"
+                                                 Margin="0,4" TextAlignment="Right"/>-->
+
+
+
+                                    </Grid>
+                                </Grid>
+                            </Grid >
+                        </Expander>
+
+                        <GridSplitter Grid.Row="3" HorizontalAlignment="Stretch" IsEnabled="False" Focusable="False" />
+                        <!--Bottom telerik:RadButtons Begin-->
+                        <Grid Grid.Row="4"> 
+                                    
+                            <DockPanel>
+                                <!--<telerik:RadButton Content="_Import Items" Tag="Import" x:Name="BtnImport"
+                                            Command="{Binding ImportItemViewCommand}" Visibility="{Binding UserRoles.ImportItems}"
+                                            CommandParameter="{Binding ElementName=BtnImport}"                                     
+                                            Style="{StaticResource bottomtelerik:RadButtons}"/>-->
+                                <TextBlock  Text="{Binding NoOfItems}" Margin="20,0,0,0" FontSize="14"
+                                            Style="{StaticResource textBlockStyle1}"/>
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                                    <telerik:RadButton Content="_Add New" Tag="Add New" x:Name="BtnAddNew"
+                                            Command="{Binding AddNewItemViewCommand}" Margin="5,0"
+                                            CommandParameter="{Binding ElementName=BtnAddNew}"                                     
+                                            Click="BtnAddNew_Click"/>
+
+                                    <telerik:RadButton Content="_Save" Tag="Save" x:Name="BtnEdit"
+                                            Command="{Binding SaveItemViewCommand}" IsDefault="True"
+                                            CommandParameter="{Binding ElementName=BtnEdit}"  
+                                             />
+
+                                    <telerik:RadButton Content="_Delete" Tag="Delete" x:Name="BtnDelete"
+                                            Command="{Binding DeleteItemViewCommand}" 
+                                            CommandParameter="{Binding ElementName=BtnDelete}"                                     
+                                            Margin="5,0"/>
+
+                                    <!--<telerik:RadButton x:Name="BtnCloseW" Content="_Close"
+                                            Style="{StaticResource bottomtelerik:RadButtons}" 
+                                            IsCancel="True"/>-->
+                                </StackPanel>
+                            </DockPanel>
+
+                        </Grid>
+                        <!--Bottom telerik:RadButtons End-->
+                    </Grid>
+                </Grid>
+
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

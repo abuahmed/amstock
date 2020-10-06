@@ -1,0 +1,258 @@
+﻿<Window      x:Class="AMStock.WPF.Views.ExpenseLoans"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" AllowDrop="True" x:Name="WdwExpenseLoan"             
+             Title="Expenses and Loans" WindowStartupLocation="CenterScreen" WindowStyle="ThreeDBorderWindow"
+             Background="Transparent" AllowsTransparency="False" ResizeMode="CanResize"
+             DataContext="{Binding ExpenseLoan, Source={StaticResource Locator}}" Closing="ExpenseLoans_OnClosing"
+             Height="650" Width="860" Icon="/AMStock.WPF;component/Resources/AppIcon.ico" >
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/MainSkin.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ControlsDictionary.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ListViewDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid ShowGridLines="False" x:Name="LayoutRoot">
+        <Border Style="{StaticResource mainBorder2}" CornerRadius="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="2"/>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!--Headers List Grid-->
+                <Grid Grid.Row="0" Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock  Grid.Row="0" Grid.Column="0" Text="Store/Shop:"
+                                     Style="{StaticResource textBlockStyle1}"/>
+                        <ComboBox   Grid.Row="0" Grid.Column="1"
+                                    Text="For Store:"
+                                    x:Name="CmbCurrentWarehouse" 
+                                    ItemsSource="{Binding Warehouses, Mode= OneWay}"
+                                    SelectedItem="{Binding SelectedWarehouse}"                                       
+                                    DisplayMemberPath="DisplayName"
+                                    Style="{StaticResource comboBoxStyle1}"/>
+                        <TextBlock  Text="Type:" Grid.Column="2" Grid.Row="0"
+                                            Style="{StaticResource textBlockStyle1}"/>
+                        <ComboBox x:Name="CmbTypeOfPayments" Grid.Column="3" Grid.Row="0"  
+                                  Style="{StaticResource comboBoxStyle1}" 
+                                  ItemsSource="{Binding PaymentTypesFilter}"
+                                  DisplayMemberPath="Display"
+                                  SelectedItem="{Binding SelectedPaymentType}"/>
+                        <Button Grid.Row="0" Grid.Column="4" Margin="5,0,0,0" 
+                                    IsEnabled="True"
+                                    Content="Refresh List" 
+                                    Command="{Binding RefreshWindowCommand}" 
+                                    Height="30"/>
+                        <Button Grid.Row="0" Grid.Column="5" Margin="5,0,0,0" 
+                                    IsEnabled="True"
+                                    Content="Export List" 
+                                    Command="{Binding ExportToExcelCommand}" 
+                                    Height="30"/>
+
+
+                    </Grid>
+
+
+                    <Expander Grid.Row="1" Header="More Filter" Margin="0,0" IsExpanded="False" 
+                              Foreground="White" 
+                              TextBlock.FontFamily="Bookman old style" 
+                              TextBlock.FontSize="12"
+                              HorizontalAlignment="Stretch">
+                        <Grid Margin="5,5">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition  Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition  Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition  Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="Period:" Grid.Column="0" Grid.Row="0" Margin="0,5" VerticalAlignment="Center"/>
+                            <ComboBox   Grid.Column="1" Grid.Row="0"
+                                        x:Name="CmbFilterPeriod"                                           
+                                        ItemsSource="{Binding FilterPeriods, Mode= TwoWay}"
+                                        SelectedItem="{Binding SelectedPeriod}"
+                                        DisplayMemberPath="Display"
+                                        Style="{StaticResource comboBoxStyle1}"/>
+
+                            <TextBlock Text="From:" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center"/>
+                            <DatePicker Grid.Column="3" Grid.Row="0"
+                                            x:Name="DtFromDate" 
+                                            SelectedDate="{Binding FilterStartDate}" 
+                                            Margin="5,5" 
+                                            VerticalAlignment="Center"/>
+
+                            <TextBlock Text="To:" Grid.Column="4" Grid.Row="0" VerticalAlignment="Center"/>
+                            <DatePicker Grid.Column="5" Grid.Row="0"
+                                            x:Name="DtToDate" 
+                                            SelectedDate="{Binding FilterEndDate}" 
+                                            Margin="5,5"  
+                                            VerticalAlignment="Center"/>
+
+                            <TextBlock Text="By Reason:" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center"/>
+                            <TextBox x:Name="TxtbyReason" Grid.Column="1" Grid.Row="1"
+                                     Margin="5,5" Height="25" TextAlignment="Left"  FontSize="14" TextWrapping="WrapWithOverflow"                                
+                                     Text="{Binding FilterByReason, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"/>
+
+                            <TextBlock Text="By To/From:" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center"/>
+                            <TextBox x:Name="TxtbyPerson" Grid.Column="3" Grid.Row="1"  
+                                     Margin="5,5" Height="25" TextAlignment="Left" FontSize="14" TextWrapping="Wrap"
+                                     Text="{Binding FilterByPerson, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"/>
+                        </Grid>
+
+                    </Expander>
+
+                </Grid>
+                <!--Grid Coulumn Splitter-->
+                <!--<GridSplitter Grid.Row="1" Height="2" HorizontalAlignment="Stretch" Margin="5,0"/>-->
+                <!--Lines List Grid-->
+                <Grid Grid.Row="2"  Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0">
+                        </StackPanel>
+
+
+                        <ListView Grid.Row="1" x:Name="ListView"
+                                      ItemContainerStyle="{StaticResource GridViewItem}" 
+                                      SelectedItem="{Binding SelectedPayment}"                            
+                                      ItemsSource="{Binding Payments}">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="true" ColumnHeaderContainerStyle="{StaticResource GridViewHeader}">
+                                    <GridViewColumn Header="Store" DisplayMemberBinding="{Binding Warehouse.DisplayName}" Width="auto"/>
+                                    <GridViewColumn Header="Type" DisplayMemberBinding="{Binding PaymentTypeString}" Width="auto"/>
+                                    <GridViewColumn Header="On Date" DisplayMemberBinding="{Binding PaymentDateString}" Width="auto"/>
+                                    <GridViewColumn Header="Reason" DisplayMemberBinding="{Binding Reason}"  Width="200"/>
+                                    <GridViewColumn Header="To/From" DisplayMemberBinding="{Binding PersonName}"  Width="auto"/>
+                                    <GridViewColumn Header="Amount" DisplayMemberBinding="{Binding AmountString}" Width="auto"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="13"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!--<StackPanel Grid.Row="0">
+
+                            <TextBlock Text="Payment Detail"  Style="{StaticResource userControlTextBlockHeader}"  />
+                            <Separator Background="White"/>
+                        </StackPanel>-->
+
+                        <GridSplitter Grid.Row="2" Height="3" Margin="0,5" HorizontalAlignment="Stretch" />
+                        <StackPanel Grid.Row="3" Margin ="0" Orientation="Vertical">
+
+                            <DockPanel LastChildFill="True">
+                                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" HorizontalAlignment="Right" >
+                                    <Button DockPanel.Dock="Left" Tag="Expense"
+                                        IsEnabled="{Binding AddNewPaymentCommandVisibility}"
+                                        Content="Add New Expense" Name="ButtonExpense"   
+                                        CommandParameter="{Binding ElementName=ButtonExpense}"
+                                        Command="{Binding AddNewPaymentCommand}" 
+                                        Height="30" HorizontalAlignment="Left"                                     
+                                        Padding="10,0" IsDefault="True" 
+                                        Margin="5,0,0,0"/>
+                                    <Button DockPanel.Dock="Left" Tag="CashLoan" 
+                                        IsEnabled="{Binding AddNewPaymentCommandVisibility}"
+                                        Content="Add New Cash Loan"  Name="ButtonCashLoan"                               
+                                        Command="{Binding AddNewPaymentCommand}" 
+                                            CommandParameter="{Binding ElementName=ButtonCashLoan}"
+                                        Height="30" HorizontalAlignment="Left"                                     
+                                        Padding="10,0" 
+                                        Margin="5,0,0,0"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20,0" >
+                                    <TextBlock FontSize="12" FontWeight="Bold" FontFamily="Bookman old style" 
+                                               Text="Total No: " VerticalAlignment="Center"/>
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
+                                               FontSize="12" FontWeight="Bold" FontFamily="Bookman old style"
+                                               Text="{Binding TotalNumberOfPayments}" />
+                                    <TextBlock Margin="10,0,0,0" FontSize="12" FontWeight="Bold" FontFamily="Bookman old style" 
+                                               Text="Total Value: " VerticalAlignment="Center"/>
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
+                                               FontSize="12" FontWeight="Bold" FontFamily="Bookman old style"
+                                               Text="{Binding TotalValueOfPayments}" />
+                                </StackPanel>
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" >
+                                    <Button Content="_Edit" Tag="Edit"
+                                            Name="ButtonEdit" IsEnabled="{Binding SavePaymentCommandVisibility}"                              
+                                            Command="{Binding AddNewPaymentCommand}" 
+                                            CommandParameter="{Binding ElementName=ButtonEdit}"                                        
+                                            Height="30" Width="80"
+                                            Margin="5,0,0,0"
+                                            Padding="10,0" />
+                                    <Button Content="_Delete" 
+                                        Command="{Binding DeletePaymentCommand}" 
+                                        IsEnabled="{Binding SavePaymentCommandVisibility}"                                        
+                                        Height="30" Width="80"
+                                        Margin="5,0,0,0"
+                                        Padding="10,0" />
+
+                                </StackPanel>
+                            </DockPanel>
+
+
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
+
+
+

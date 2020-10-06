@@ -1,0 +1,171 @@
+﻿<Window x:Class="AMStock.WPF.Views.BusinessPartnerDetail"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        mc:Ignorable="d"
+        Title="{Binding HeaderText}" Height="340" Width="580" x:Name="WdwBusinessPartnerDetail"
+        DataContext="{Binding BusinessPartnerDetail, Source={StaticResource Locator}}" ResizeMode="NoResize"
+        Background="Transparent" AllowsTransparency="False" WindowStyle="ThreeDBorderWindow"
+        WindowStartupLocation="CenterScreen" Icon="/AMStock.WPF;component/Resources/AppIcon.ico" 
+        Loaded="WdwBusinessPartnerDetail_Loaded" 
+        Closing="WdwBusinessPartnerDetail_Closing"><!---->
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/MainSkin.xaml" />
+                <!--ResourceDictionary Source="/AMStock.WPF;component/Skins/ListViewDictionary.xaml" /-->
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ControlsDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        
+          
+        </ResourceDictionary>
+    </Window.Resources>
+    
+    <Grid>
+        <Border Style="{StaticResource mainBorder}" CornerRadius="0"
+                TextBlock.FontFamily="Bookman old style" TextBlock.Foreground="White">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="3"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                
+                <!--<StackPanel Grid.Row="0">
+                    <Button x:Name="btnClose" 
+                            Style="{StaticResource closeWindowButtons}"
+                            IsCancel="True"/>
+
+                    <TextBlock Text="BusinessPartner Detail" FontSize="18" Margin="10,-20,0,0"
+                           Style="{StaticResource windowTextBlockHeader}"  />
+                </StackPanel>-->
+                
+                <Grid Grid.Row="1" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="240"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="0" Margin="10">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="35"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding BusinessPartner}" VerticalAlignment="Center"/>
+                        <TextBox x:Name="TxtCustName" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" TextWrapping="Wrap"
+                                 ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=CustName}"
+                                 Text="{Binding SelectedBusinessPartner.DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                 Validation.Error="Validation_Error" Margin="0,5,0,5" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Tin Number:" VerticalAlignment="Center"/>
+                        <TextBox x:Name="CustCode" Grid.Row="2" Grid.Column="1" Margin="0,5,0,5" 
+                                             ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=CustCode}" 
+                                             Text="{Binding SelectedBusinessPartner.TinNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                             Validation.Error="Validation_Error"  />
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="VAT Number:" VerticalAlignment="Center"/>
+                        <TextBox x:Name="TxtVatNum" Grid.Row="3" Grid.Column="1" Margin="0,5,0,5" 
+                                             ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtVatNum}" 
+                                             Text="{Binding SelectedBusinessPartner.VatNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                             Validation.Error="Validation_Error"  />
+
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="More Description:" VerticalAlignment="Center"/>
+                        <TextBox Grid.Row="4" Grid.Column="1" Grid.RowSpan="2" 
+                                 Text="{Binding SelectedBusinessPartner.Description}" TextWrapping="Wrap"
+                                 Margin="0,5,0,5" />
+
+                    </Grid>
+
+                    <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+
+                    <Grid Grid.Column="2" >
+                        <Expander Header="Detail Address" HorizontalAlignment="Stretch" IsExpanded="True"
+                                  TextBlock.FontFamily="Bookman old style" TextBlock.Foreground="White">
+                            <Grid Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="70"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="35"/>
+                                    <RowDefinition Height="35"/>
+                                    <RowDefinition Height="35"/>
+                                    <RowDefinition Height="35"/>
+                                    <RowDefinition Height="35"/>
+                                    <RowDefinition Height="35"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="City:" VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="0" x:Name="TxtCity" Grid.Column="1" ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtCity}" 
+                                        Text="{Binding SelectedBusinessPartner.Addresses.City, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                         Validation.Error="Validation_Error" Margin="0,5,0,5" />
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Address:" VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="1" x:Name="TxtStreetAddress" TextWrapping="Wrap"  Grid.Column="1" ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtStreetAddress}" 
+                                        Text="{Binding SelectedBusinessPartner.Addresses.StreetAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                         Validation.Error="Validation_Error" Grid.RowSpan="2" Margin="0,5,0,5" />
+
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Telephone:" VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="3" x:Name="TxtTelephone" Grid.Column="1" 
+                                         ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtTelephone}" 
+                                         Text="{Binding SelectedBusinessPartner.Addresses.Telephone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                         Validation.Error="Validation_Error"  Margin="0,5,0,5" />
+
+                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Mobile:" VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="4"  x:Name="TxtMobile"  Grid.Column="1" 
+                                         ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtMobile}" 
+                                         Text="{Binding SelectedBusinessPartner.Addresses.Mobile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                         Validation.Error="Validation_Error" Margin="0,5,0,5" />
+
+                                <TextBlock Grid.Row="5" Grid.Column="0" Text="Email:" VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="5"  x:Name="TxtEmail"  Grid.Column="1" 
+                                         ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtEmail}" 
+                                         Text="{Binding SelectedBusinessPartner.Addresses.PrimaryEmail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                         Validation.Error="Validation_Error" Margin="0,5,0,5" />
+
+                            </Grid>
+                        </Expander>
+
+                    </Grid>
+                    
+                </Grid>
+
+                <GridSplitter Grid.Row="2" Height="3" HorizontalAlignment="Stretch" />
+
+                <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Top" Margin="0,5,0,5" HorizontalAlignment="Right">
+                    <Button Content="_Save" 
+                            Command="{Binding SaveCloseBusinessPartnerViewCommand}" 
+                            x:Name="btnSaveClose" 
+                            CommandParameter="{Binding ElementName=WdwBusinessPartnerDetail}" 
+                            Height="30" 
+                            Padding="10,0" 
+                            Margin="10,0,0,0" 
+                            IsDefault="True"/>
+              
+                    <Button Content="_Close" 
+                            Command="{Binding CloseBusinessPartnerViewCommand}" 
+                            CommandParameter="{Binding ElementName=WdwBusinessPartnerDetail}" 
+                            Padding="10,0" 
+                            Height="30" 
+                            Margin="10,0,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

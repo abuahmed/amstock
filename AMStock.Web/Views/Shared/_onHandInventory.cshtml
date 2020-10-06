@@ -1,0 +1,122 @@
+﻿@model IEnumerable<AMStock.Core.Models.ItemQuantityDTO>
+<div id="table_id">
+    <div id="spinner">
+    </div>
+
+    @*<div>
+        <span>@ViewData["ItemSearch"]</span>
+    </div>*@
+    
+    <div class="alert alert-info fade in @ViewData["ItemSearchHidden"]">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        @MvcHtmlString.Create(@ViewData["ItemSearch"].ToString())
+    </div>
+
+    <div>
+        <p> (@ViewData["totalNumber"]) Item(s) found</p>
+    </div>
+
+    <table class="table table-striped table-condensed table-hover " id="table_id2">
+
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.SerialNumber)
+            </th>
+            <th>Store Name
+            </th>
+            <th>@Html.DisplayNameFor(model => model.Item.ItemCode)
+            </th>
+            <th>Item Name
+            </th>
+            <th>Category
+            </th>
+            <th class="hidden-phone">UOM
+            </th>
+            <th style="text-align: right;">
+                @Html.DisplayNameFor(model => model.QuantityOnHand)
+            </th>
+            <th style="text-align: center;" class="hidden-print class="hidden-phone""></th>
+        </tr>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SerialNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Warehouse.DisplayName)
+                    </td>
+                    <td>
+                        @Html.ActionLink(@Html.DisplayFor(modelItem => item.Item.ItemCode).ToString(), "Details", "OnHandInventory", new { itemId = item.ItemId, warehouseId = item.WarehouseId }, null)
+
+                    </td>
+                    <td>
+                        @Html.ActionLink(@Html.DisplayFor(modelItem => item.Item.DisplayName).ToString(), "Details", "OnHandInventory", new { itemId = item.ItemId, warehouseId = item.WarehouseId }, null)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Item.Category.DisplayName)
+                    </td>
+                    <td class="hidden-phone">
+                        @Html.DisplayFor(modelItem => item.Item.UnitOfMeasure.DisplayName)
+                    </td>
+
+                    <td style="text-align: right;">
+                        @Html.DisplayFor(modelItem => item.QuantityOnHand)
+                    </td>
+
+                    <td style="text-align: center;" class="hidden-print hidden-phone">
+                        @Html.ActionLink("View Details", "Details", "OnHandInventory", new { itemId = item.ItemId, warehouseId = item.WarehouseId }, new { @Class = "btn btn-primary btn-small" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+    <ul class="pager">
+        <li style="display:@ViewData["prevDisabled"]; " class="hidden-print">
+            @Ajax.ActionLink("← Previous", "Index", "OnHandInventory",
+                new
+                {
+                    warehouseId = @ViewData["WarehouseId"],
+                    searchText = @ViewData["SearchText"],
+                    page = @ViewData["Page"],
+                    pageSize = @ViewData["PageSize"],
+                    ptype = -1,
+                    categoryId = @ViewData["CategoryId"],
+                    filterByQuantity = @ViewData["FilterByQuantity"]
+                }, new AjaxOptions
+                {
+                    HttpMethod = "GET",
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "table_id",
+                    LoadingElementId = "spinner"
+                })
+        </li>
+
+        <li>
+            <span>Page @ViewData["Page"] of @ViewData["totalPages"] </span>
+        </li>
+
+        <li style="display:@ViewData["nextDisabled"]; " class="hidden-print">
+            @Ajax.ActionLink("Next →", "Index", "OnHandInventory",
+                new
+                {
+                    warehouseId = @ViewData["WarehouseId"],
+                    searchText = @ViewData["SearchText"],
+                    page = @ViewData["Page"],
+                    pageSize = @ViewData["PageSize"],
+                    ptype = 1,
+                    categoryId = @ViewData["CategoryId"],
+                    filterByQuantity = @ViewData["FilterByQuantity"]
+                }, new AjaxOptions
+                {
+                    HttpMethod = "GET",
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "table_id",
+                    LoadingElementId = "spinner"
+                }, new { @style = "width: 106px;" })
+        </li>
+    </ul>
+
+</div>

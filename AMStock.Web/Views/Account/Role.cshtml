@@ -1,0 +1,143 @@
+﻿@using AmRetail.Web.Models
+
+@{
+    ViewBag.Title = "Roles";
+}
+
+<h2>Roles</h2>
+
+@(Html.Kendo().Grid<AmRetail.Web.Models.RolesViewModel>()
+.Name("Roles")
+.Columns(columns =>
+{
+    columns.Bound(p => p.RoleId); 
+    columns.Bound(p => p.RoleName).Width(120);
+    columns.Bound(p => p.RoleCategory).Width(100);   
+    columns.Bound(p => p.RoleDescription).Width(220);                                
+    columns.Command(command => { 
+        command.Edit(); 
+        command.Destroy().Text("InActivate"); 
+    }).Width(170).Title("Actions")
+    .HtmlAttributes(new { @style = "text-align:center;" })
+    .HeaderHtmlAttributes(new { @style = "text-align:center;" });
+})
+.ToolBar(toolbar => { toolbar.Create(); })
+.Editable(editable => editable.Mode(GridEditMode.InLine))
+.Pageable(pager => pager
+    .Input(true)
+    .Numeric(true)
+    .Info(true)
+    .PreviousNext(true)
+    .Refresh(true)
+    .PageSizes(true)
+    )
+ 
+.Events(events => { events.Edit("edit"); events.DetailExpand("edit2"); })   
+.Selectable()
+.Navigatable()
+.Sortable()
+.Scrollable()
+ .ClientDetailTemplateId("template")   
+.Filterable(filterable => filterable
+        .Extra(false)
+        .Messages(mes=>mes.SelectValue("Select Value").IsTrue("Yes").IsFalse("No").Filter("Search").Clear("Reset"))
+        .Operators(operators => operators
+            .ForString(str => str.Clear()
+                .Contains("Contains")
+                .StartsWith("Starts with")
+                .IsEqualTo("Is equal to")
+                .IsNotEqualTo("Is not equal to")
+            ))
+        )
+//.HtmlAttributes(new { style = "height:240px;" })
+.DataSource(dataSource => dataSource
+    .Ajax()
+    .Events(events => { events.Error("error_handler"); })
+    .PageSize(15)
+        .Model(model => { 
+            model.Id(p => p.RoleId);
+            model.Field(p => p.RoleName).DefaultValue("Auto-Generate").Editable(false);
+        })
+    .Create(update => update.Action("Roles_Create", "Account"))
+    .Read(read => read.Action("Roles_Read", "Account"))
+    .Update(update => update.Action("Roles_Update", "Account"))
+    .Destroy(update => update.Action("Roles_Destroy", "Account"))
+        
+)
+
+)
+<script id="template" type="text/kendo-tmpl">
+    @(Html.Kendo().TabStrip()
+            .Name("Roles_#=RoleId#")
+            .SelectedIndex(0)
+            .Animation(animation => animation.Open(open => open.Fade(FadeDirection.In)))
+            .Items(items =>
+            {
+                items.Add().Text("Users in the Role").Content(@<text>
+                    @(Html.Kendo().Grid<UsersInRolesDTO>()
+                        .Name("Roles2_#=RoleId#")
+                        .Columns(columns =>
+                        {
+                            columns.Bound(o => o.Users).ClientTemplate("\\#:Users.UserName\\#").Title("User").Width(200);
+                            columns.Command(command => { command.Destroy().Text("Remove"); }).Width(110).Title("Actions")
+                                    .HtmlAttributes(new { @style = "text-align:center;" })
+                                    .HeaderHtmlAttributes(new { @style = "text-align:center;" });
+                        })
+                        .ToolBar(toolbar =>
+                        {
+                            toolbar.Create();
+                            toolbar.Save();
+                        })
+                        .Editable(editable => editable.Mode(GridEditMode.InCell))
+                        .Pageable(pager => pager.Refresh(true))
+                        .DataSource(dataSource => dataSource
+                            .Ajax()
+                            .Events(events => { events.Error("error_handler"); events.RequestEnd("OnRequestEnd_TopLinePriceGrid"); })
+                            .Model(model => { 
+                                model.Id(p => p.UserId);
+                                model.Field(p => p.Users).DefaultValue(
+                                               ViewData["defaultUser"] as UsersViewModel);
+                            })
+                            .Create(update => update.Action("RoleAccounts_Create", "Account", new { roleNamee = "#=RoleName#" }))
+                            .Read(read => read.Action("RoleAccounts_Read", "Account", new { roleIdd = "#=RoleId#" }))
+                            .Update(update => update.Action("RoleAccounts_Update", "Account", new { roleNamee = "#=RoleName#" }))
+                            .Destroy(update => update.Action("RoleAccounts_Destroy", "Account", new { roleNamee = "#=RoleName#" }))
+                        )
+                        .Pageable()
+                        .Sortable()
+                        .ToClientTemplate())
+                </text>
+                );
+                               
+            })
+            .ToClientTemplate())
+</script>
+
+@{Html.RenderPartial("~/Views/Shared/PopUpTemplates/BusinessPartnerP1.cshtml");}
+
+<script>
+
+
+    $(document).ready(function () {
+        $('.k-detail-cell').attr("colspan", 2);
+
+        $("#Roles").on("click", "tr", function (e) {
+            var $target = $(e.target);            
+            if (!$target.hasClass("k-button")) {
+                var $this = $(this);
+                var $link = $this.find("td.k-hierarchy-cell .k-icon");
+                $link.click();  // just fire the click event of the kendo detail row icon
+                //$this.next().find(".k-hierarchy-cell").hide();  //fix detail row spacing due to missing icon
+            }
+        });
+      
+        
+    });
+
+    function edit2(e) {
+        $('.k-detail-cell').attr("colspan", 2);
+        
+        //only expand on row at a time
+        this.collapseRow(this.tbody.find(' > tr.k-master-row').not(e.masterRow));
+    }
+</script>

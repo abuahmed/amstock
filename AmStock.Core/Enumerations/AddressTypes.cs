@@ -1,0 +1,5 @@
+﻿namespace AMStock.Core.Enumerations
+{
+ 
+
+}

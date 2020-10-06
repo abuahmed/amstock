@@ -1,0 +1,618 @@
+﻿<UserControl xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"  
+             x:Class="AMStock.WPF.Views.Transactions"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" AllowDrop="True"
+             Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
+
+    <!--DataContext="{Binding Transactions, Source={StaticResource Locator}}"-->
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/MainSkin.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ControlsDictionary.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ListViewDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate x:Key="TransactionsListBoxDataTemplate" >
+                <Grid>
+                    <Border Style="{StaticResource mainBorder3}">
+                        <Grid TextBlock.Foreground="White" TextBlock.FontFamily="Bookman Old Style">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding TransactionNumber}" FontWeight="Bold" FontSize="14"  />
+                            <!--<TextBlock Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" FontSize="12"  FontWeight="Bold" Text="{Binding BusinessPartner.DisplayNameShort,Mode=TwoWay}" Margin="0"/>
+                            <TextBlock Grid.Column="3" Grid.Row="0" FontSize="12" FontWeight="Normal" Text="{Binding PaymentCompleted}" Margin="0"/>-->
+
+                            <TextBlock Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" FontSize="14" 
+                                       FontWeight="Bold" Text="{Binding TransactionDateStringAmharic}" Foreground="GreenYellow"/>
+
+                            <StackPanel Grid.Column="3" Grid.Row="1" Orientation="Horizontal"  >
+                                <TextBlock FontSize="12" FontWeight="Bold" Text="{Binding StatusString}" Foreground="GreenYellow" Margin="0"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="3" Grid.Row="0" Orientation="Horizontal" Margin="5,0,0,0"  >
+                                <TextBlock FontSize="14" FontWeight="Bold" Text="{Binding NoofItems}" Foreground="MediumSpringGreen" Margin="0" TextAlignment="Right"/>
+                                <TextBlock FontSize="14" Text=" Item(s)" Foreground="MediumSpringGreen"/>
+                            </StackPanel>
+
+                            <!--<StackPanel Grid.Column="3" Grid.Row="1" Orientation="Horizontal"  >
+                                <TextBlock FontSize="12" Text="$" Margin="0" Foreground="PaleGreen"/>
+                                <TextBlock FontSize="12" FontWeight="Bold" Text="{Binding TotalDue}" Foreground="PaleGreen" />
+                            </StackPanel>-->
+
+                        </Grid>
+                    </Border>
+                </Grid>
+            </DataTemplate>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid ShowGridLines="False" x:Name="LayoutRoot" Margin="20,0" >
+        <Border Style="{StaticResource mainBorder2}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="350" MaxWidth="380"/>
+                    <ColumnDefinition Width="2"/>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!--Headers List Grid-->
+                <Grid Grid.Column="0" Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock  Grid.Row="1" Grid.Column="0" Text="Store/Shop:"
+                                     Style="{StaticResource textBlockStyle1}"/>
+                        <ComboBox   Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" 
+                                    Text="For Store:"
+                                    x:Name="CmbCurrentWarehouse" 
+                                    ItemsSource="{Binding Warehouses, Mode= OneWay}"
+                                    SelectedItem="{Binding SelectedWarehouse}"                                       
+                                    DisplayMemberPath="DisplayName"
+                                    Style="{StaticResource comboBoxStyleWarehouse}"/>
+                        <telerik:RadButton Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Margin="0,0,0,0" 
+                                    IsEnabled="True" x:Name="ButtonRefresh"
+                                    Content=" Refresh " 
+                                    Command="{Binding RefreshWindowCommand}" 
+                                    Height="30" Click="ButtonRefresh_Click" Width="auto"/>
+
+                    </Grid>
+
+
+                    <Expander Grid.Row="1" Header="Filter" IsExpanded="True"
+                              Foreground="White" FontFamily="Bookman old style" >
+                        <Grid Margin="5" TextBlock.FontFamily="Bookman old style"
+                              TextBlock.Foreground="White">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="Period:" Grid.Column="0" Grid.Row="0" Margin="0,5" VerticalAlignment="Center"/>
+                            <ComboBox   Grid.Column="1" Grid.Row="0"  Grid.ColumnSpan="3" 
+                                        x:Name="CmbFilterPeriod"                                           
+                                        ItemsSource="{Binding FilterPeriods, Mode= OneWay}"
+                                        SelectedItem="{Binding SelectedPeriod}"
+                                        DisplayMemberPath="Display"
+                                        Style="{StaticResource comboBoxStyle1}"
+                                        />
+
+                            <TextBlock Text="From:" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center"/>
+                            <DatePicker Grid.Column="1" Grid.Row="1" 
+                                            x:Name="DtFromDate" 
+                                            SelectedDate="{Binding FilterStartDate}" 
+                                            Margin="2,5"  MaxWidth="115" HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"/>
+
+                            <TextBlock Text="To:" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center"/>
+                            <StackPanel Grid.Column="3" Grid.Row="1" Orientation="Horizontal">
+                                <DatePicker x:Name="DtToDate" 
+                                            SelectedDate="{Binding FilterEndDate}" 
+                                            Margin="2,5"   MaxWidth="115"
+                                            VerticalAlignment="Center"/>
+                                <telerik:RadButton Content=" GO  " Margin="0,5"
+                                                   Width="40" Command="{Binding FilterByDateCommand}"/>
+                            </StackPanel>
+
+                            <!--<TextBlock Text="Status:" Grid.Column="0" Grid.Row="3" Margin="0,5" 
+                                       VerticalAlignment="Center"/>
+                            <ComboBox   Grid.Column="1" Grid.Row="3"  Grid.ColumnSpan="3" 
+                                        x:Name="CmbFilterPaymentStatus"                                           
+                                        ItemsSource="{Binding FilterStatus, Mode= OneWay}"
+                                        SelectedItem="{Binding SelectedStatus}"
+                                        DisplayMemberPath="Display" 
+                                        Style="{StaticResource comboBoxStyle1}"/>-->
+
+                            <!--<TextBlock Text="{Binding BusinessPartnerText}" Grid.Column="0" Grid.Row="2" Margin="0,5" 
+                                       VerticalAlignment="Center"/>
+                            <ComboBox x:Name="CmbFilterBusinessPartners" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3"
+                                          ItemsSource="{Binding BusinessPartnersForFilter,Mode=OneWay}"
+                                          DisplayMemberPath="DisplayName" 
+                                          SelectedItem="{Binding SelectedBusinessPartnerForFilter}"
+                                          Style="{StaticResource comboBoxStyle1}"/>
+
+                          
+
+                            <TextBlock Text="Number:" Grid.Column="0" Grid.Row="4" Margin="0,5" 
+                                       VerticalAlignment="Center"/>
+
+                            <telerik:RadAutoCompleteBox x:Name="LstTransactionsNumberAutoCompleteBox" Grid.Column="1" Grid.Row="4"
+                                                                ItemsSource="{Binding TransactionList, Mode=TwoWay}"
+                                                                SelectedItem="{Binding SelectedTransactionForFilter, Mode=TwoWay}"
+                                                                Grid.ColumnSpan="3" Margin="5" 
+                                                                HorizontalAlignment="Stretch" 
+                                                                VerticalAlignment="Center"
+                                                                WatermarkContent="Type Number..."
+											                    TextSearchMode="Contains"
+											                    AutoCompleteMode="Suggest"
+											                    SelectionMode="Single"
+											                    TextSearchPath="TransactionNumber"											                
+											                    BorderBrush="#FF25A0DA" 
+                                                                BorderThickness="1"/>-->
+                        </Grid>
+
+                    </Expander>
+
+
+                    <ListBox Grid.Row="2" Margin="0,10" 
+                                 x:Name="LstTransactions" 
+                                 Background="Transparent" 
+                                 BorderBrush="Transparent" 
+                                 SelectedItem="{Binding SelectedTransaction}"
+                                 MinHeight="350" MinWidth="150"                                 
+                                 ItemsSource="{Binding Transactions,Mode=TwoWay}" 
+                                 Style="{StaticResource myListboxStyle}"
+                                 ItemTemplate="{DynamicResource TransactionsListBoxDataTemplate}" 
+                             SelectionChanged="LstTransactions_SelectionChanged"/>
+
+                    <Expander Header="Summary" Grid.Row="3" Margin="10,5" IsExpanded="True"
+                                TextBlock.Foreground="White" 
+                                TextBlock.FontFamily="Bookman Old Style" 
+                                TextBlock.FontSize="14"
+                                TextBlock.FontWeight="Normal">
+                        <StackPanel Margin="10,5">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock  Text=" Total Transactions: " />
+                                <TextBlock FontSize="14" FontWeight="Bold" Text="{Binding TotalNumberOfTransaction}"/>
+                            </StackPanel>
+                            <!--<StackPanel Orientation="Horizontal">
+                                <TextBlock Text=" Total Amount: " />
+                                <TextBlock FontSize="14" FontWeight="Bold" Text="{Binding TotalValueOfTransaction}"/>
+                            </StackPanel>-->
+                            <!--<StackPanel Orientation="Horizontal" Visibility="{Binding SummaryVisibility}">
+                                <TextBlock Text=" Total Purchased Amount: " />
+                                <TextBlock FontSize="14" FontWeight="Bold" Text="{Binding TotalValueOfPurchase}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Visibility="{Binding SummaryVisibility}">
+                                <TextBlock Text=" Expenses: " />
+                                <TextBlock FontSize="14" FontWeight="Bold" Text="{Binding Expenses}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Visibility="{Binding SummaryVisibility}">
+                                <TextBlock Text=" Difference/Profit: " />
+                                <TextBlock FontSize="14" FontWeight="Bold" Text="{Binding Profit}"/>
+
+                            </StackPanel>-->
+                        </StackPanel>
+                    </Expander>
+                </Grid>
+                <!--Grid Coulumn Splitter-->
+                <GridSplitter Grid.Column="1" Width="2" HorizontalAlignment="Stretch" IsEnabled="False" Focusable="False"/>
+                <!--Lines List Grid-->
+                <Grid Grid.Column="2"  Margin="5" TextBlock.FontFamily="Bookman old style" TextBlock.FontSize="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" MinHeight="30"/>
+                        <RowDefinition Height="*" MinHeight="400"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Grid.Column="0">
+                            <DockPanel>
+                                <telerik:RadButton DockPanel.Dock="Left" Name="BtnAddNewTransaction"
+                                        IsEnabled="{Binding AddNewTransactionEnability}" 
+                                        Content="{Binding TransactionText}"                                 
+                                        Command="{Binding AddNewTransactionCommand}" 
+                                        Height="30" Visibility="{Binding AddTransaction}"                                     
+                                        Padding="40,0" Width="auto"
+                                        Margin="5,0,0,0" Click="BtnAddNewTransaction_Click"/>
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" >
+                                    <telerik:RadButton Content="Save" Visibility="{Binding AddTransaction}" 
+                                        Command="{Binding SaveTransactionCommand}" 
+                                        IsEnabled="{Binding SaveHeaderEnability}"
+                                        Height="30" 
+                                        Width="90" 
+                                        Padding="10,0" 
+                                        Margin="5,0,0,0"/>
+                                    <telerik:RadButton Content="P_ost" 
+                                        Command="{Binding PostTransactionCommand}"
+                                        IsEnabled="{Binding SaveHeaderEnability}" 
+                                        Padding="10,0" Visibility="{Binding PostTransaction}"
+                                        Margin="5,0,0,0" 
+                                        Height="30" 
+                                        MinWidth="90"  />
+                                    <telerik:RadButton Content="_Un-Post" 
+                                        Command="{Binding UnPostTransactionCommand}"
+                                        IsEnabled="{Binding UnPostEnability}"                                        
+                                        Height="30" Visibility="{Binding UnPostTransaction}"
+                                        MinWidth="90" 
+                                        Padding="10,0" 
+                                        Margin="5,0,0,0"/>
+                                    <telerik:RadButton Content="Delete" 
+                                        Command="{Binding DeleteTransactionCommand}" 
+                                        IsEnabled="{Binding SaveHeaderEnability}"
+                                        Height="30" 
+                                        Width="90" Visibility="{Binding DeleteTransaction}"
+                                        Padding="10,0" 
+                                        Margin="5,0,0,0"/>
+                                    <!--<telerik:RadButton Content="Attachment" 
+                                        Command="{Binding PrintTransactionCommand}" 
+                                        IsEnabled="{Binding UnPostEnability}"
+                                        Height="30" Visibility="{Binding PrintTransactionVisibility}"
+                                        Width="100"
+                                        Padding="10,0" 
+                                        Margin="5,0,0,0"/>-->
+                                </StackPanel>
+                            </DockPanel>
+                            <Separator Background="White" Margin="5" VerticalAlignment="Bottom"/>
+                        </StackPanel>
+                        <Expander Grid.Row="1" Header="Detail" 
+                                  IsExpanded="True" 
+                                  IsEnabled="{Binding SaveHeaderEnability, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  Foreground="White">
+                            <Grid Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="130"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition  />
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition  />
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Foreground="White" Grid.Column="0"
+                                            Text="{Binding BusinessPartnerText}" 
+                                            Margin="5"  
+                                            VerticalAlignment="Center"/>
+                                <ComboBox x:Name="CmbBusinessPartners" Grid.Column="1" 
+                                          ItemsSource="{Binding BusinessPartners,Mode=TwoWay}"
+                                          IsEnabled="{Binding SaveHeaderEnability}"
+                                          DisplayMemberPath="DisplayName"  
+                                          SelectedItem="{Binding SelectedBusinessPartner}"                                           
+                                          Background="Transparent" VerticalContentAlignment="Center"
+                                          Margin="0,2" />
+                                <!--<telerik:RadButton Content="+" Grid.Column="2"
+                                            Command="{Binding BusinessPartnerDetailViewCommand}" 
+                                        IsEnabled="{Binding SaveHeaderEnability}"
+                                            FontSize="16"                                            
+                                            FontWeight="ExtraBold" 
+                                            Margin="0,2" Height="25"
+                                            ToolTip="Add New BusinessPartner"/>-->
+
+                                <TextBlock  Foreground="White" Grid.Column="3"
+                                            Text="Number: " 
+                                            Margin="5"  
+                                            VerticalAlignment="Center"/>
+                                <TextBox  Foreground="Black" IsEnabled="False" Grid.Column="4"
+                                            Text="{Binding SelectedTransaction.TransactionNumber, Mode=TwoWay}" 
+                                            Margin="0,5" FontWeight="Bold" VerticalAlignment="Center"
+                                            />
+
+                                <TextBlock Foreground="White" Grid.Column="5"
+                                            Text="Date: " 
+                                            Margin="5"  
+                                            VerticalAlignment="Center"/>
+
+                                <telerik:RadDateTimePicker Grid.Column="6" x:Name="DtTransactionsDate"                                        
+									ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=DtTransactionsDate}" 
+									SelectedValue="{Binding SelectedTransaction.TransactionDate, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+									Validation.Error="Validation_Error"
+                                    IsEnabled="{Binding SaveHeaderEnability}"
+									VerticalAlignment="Center"/>
+
+                                <TextBlock Foreground="White" Grid.Column="7"
+                                            Text="Status:" 
+                                            Margin="5"  
+                                            VerticalAlignment="Center"/>
+                                <TextBox Grid.Column="8" IsEnabled="False"
+                                            Text="{Binding SelectedTransaction.Status,Mode=TwoWay}"
+                                            Foreground="Black" x:Name="TxtStatus" 
+                                            HorizontalAlignment="Stretch" FontSize="12" FontWeight="Bold"  
+                                            VerticalAlignment="Center" />
+
+                                <TextBlock Foreground="White" Grid.Column="9"
+                                            Text="Store:" 
+                                            Margin="5"  
+                                            VerticalAlignment="Center"/>
+                                <TextBox    Grid.Column="10" IsEnabled="False"
+                                            Text="{Binding SelectedTransaction.Warehouse.DisplayName,Mode=TwoWay}" 
+                                            Foreground="Black" x:Name="TxtStoreSelected" 
+                                            HorizontalAlignment="Stretch" FontSize="12" FontWeight="Bold" 
+                                            VerticalAlignment="Center" />
+
+                            </Grid>
+                            <!--</StackPanel>-->
+                        </Expander>
+                        <Expander Grid.Row="2" Header="Items Entry" 
+                                  IsExpanded="{Binding SaveHeaderExpandibility}"
+                                  IsEnabled="{Binding SaveHeaderEnability, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  Foreground="White">
+
+                            <Grid Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition  Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <telerik:RadAutoCompleteBox x:Name="LstItemsAutoCompleteBox" Grid.Column="0" Grid.ColumnSpan="2"
+                                                            ItemsSource="{Binding ItemsQuantity, Mode=TwoWay}"
+                                                            SelectedItem="{Binding SelectedItemQuantity, Mode=TwoWay}"
+                                                            Margin="5,5,0,5" Width="170"
+                                                            HorizontalAlignment="Stretch" 
+                                                            VerticalAlignment="Center"
+                                                            WatermarkContent="Choose Item..."
+											                TextSearchMode="Contains"
+											                AutoCompleteMode="Suggest"
+											                SelectionMode="Single"
+											                TextSearchPath="Item.ItemDetail"											                
+											                BorderBrush="#FF25A0DA" 
+                                                            BorderThickness="1"
+                                                            SelectionChanged="LstItemsAutoCompleteBox_OnSelectionChanged"/>
+
+                                <telerik:RadButton Content="_+" Visibility="Collapsed"
+                                            Command="{Binding AddNewItemCommand}"
+                                            FontSize="16" Grid.Column="2"                                           
+                                            FontWeight="ExtraBold" Focusable="False"
+                                            Margin="0" Height="22" Width="20"
+                                            ToolTip="Add New Item"/>
+
+                                <TextBlock  Text="Store Qty." Grid.Column="3"
+                                                Foreground="White" 
+                                                Margin="5"                                                 
+                                                HorizontalAlignment="Stretch" 
+                                                VerticalAlignment="Center"/>
+                                <TextBox  x:Name="CurrentQuantity" Grid.Column="4"
+                                           ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=CurrentQuantity}" 
+                                                Text="{Binding TransactionLine.ItemCurrentQuantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                                Validation.Error="Validation_LineError" 
+                                                IsEnabled="False" Width="50"                                              
+                                                Foreground="Black" 
+                                                FontWeight="Bold" 
+                                                TextAlignment="Right" 
+                                                HorizontalAlignment="Stretch" 
+                                                VerticalAlignment="Center"/>
+
+                                <!----><TextBlock  Text="Unit Price" Grid.Column="5"
+                                                Foreground="White" 
+                                                Margin="5"                                                 
+                                                HorizontalAlignment="Stretch" 
+                                                VerticalAlignment="Center"/>
+                                <TextBox    x:Name="TxtEachPrice" Grid.Column="6"
+                                                ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtEachPrice}" 
+                                                Text="{Binding TransactionLine.EachPrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                                Validation.Error="Validation_LineError" 
+                                                FontWeight="Bold" Width="50"
+                                                TextAlignment="Right" Margin="0,5"
+                                                HorizontalAlignment="Stretch" 
+                                                VerticalAlignment="Center"/>
+                                <CheckBox Content="+Tax" Grid.Column="7" 
+                                          IsChecked="{Binding UnitPricePlusTax}"
+                                          Visibility="{Binding UnitPricePlusTaxVisibility}"
+                                          Margin="0,0,5,0" Foreground="White"
+                                          VerticalAlignment="Center" Background="Transparent"/>
+
+                                <TextBlock  Text="Qty." Grid.Column="8"
+                                                Foreground="White" 
+                                                Margin="5"                                                 
+                                                HorizontalAlignment="Stretch" 
+                                                VerticalAlignment="Center"/>
+                                <TextBox    x:Name="TxtNewQuantity" Grid.Column="9"
+                                                ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtNewQuantity}" 
+                                                Text="{Binding TransactionLine.UnitQuantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                                Validation.Error="Validation_LineError" 
+                                                Margin="0,5" Width="50"
+                                                FontWeight="Bold" 
+                                                TextAlignment="Right" 
+                                                HorizontalAlignment="Stretch" 
+                                                VerticalAlignment="Center"/>
+
+                                <TextBlock  Foreground="White" Grid.Column="10"
+                                                Margin="5" 
+                                                Text="=" TextAlignment="Center"
+                                                HorizontalAlignment="Stretch" 
+                                                VerticalAlignment="Center"/>
+                                           <TextBox  x:Name="LineTotal" Grid.Column="11"
+                                                Text="{Binding TransactionLine.LineTotal}" 
+                                                FontWeight="Bold" IsEnabled="False"
+                                                TextAlignment="Right" Width="80"
+                                                HorizontalAlignment="Stretch" 
+                                                VerticalAlignment="Center"/>
+
+                                <!--<TextBox    x:Name="TxtDifference" Grid.Column="10" Visibility="Visible"
+                                                ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtDifference}" 
+                                                Text="{Binding TransactionLine.Difference, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                                Validation.Error="Validation_LineError" 
+                                                FontWeight="Bold"
+                                                TextAlignment="Right" Margin="0,5"
+                                                HorizontalAlignment="Stretch" 
+                                                VerticalAlignment="Center"/>
+                                IsEnabled="{Binding AddLineEnability, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" -->
+                                <telerik:RadButton Content="_Save Item" Grid.Column="12" x:Name="BtnSaveLine"
+                                        Visibility="{Binding AddTransaction}" IsDefault="True"
+                                        Command="{Binding AddTransactionLineCommand}" CommandParameter="{Binding ElementName=LstItemsAutoCompleteBox}"
+                                        Margin="5" FontSize="12" FontWeight="Normal"
+                                        Height="25" Click="BtnSaveLine_Click" />
+                                <telerik:RadButton Content="_Edit Item" Grid.Column="13"
+                                        Command="{Binding EditTransactionLineCommand}" 
+                                        Margin="0,5" FontSize="12" FontWeight="Normal"
+                                        Height="25" />
+                                <telerik:RadButton Content="_Remove Item" Grid.Column="14"
+                                        Command="{Binding DeleteTransactionLineCommand}"  CommandParameter="{Binding ElementName=LstItemsAutoCompleteBox}"
+                                        Margin="5" FontSize="12" FontWeight="Normal"
+                                        Height="25" />
+                            </Grid>
+                            <!--</StackPanel>-->
+
+                        </Expander>
+
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!--<StackPanel  Orientation="Vertical">-->
+                        <ListView Grid.Row="0" x:Name="ListView" 
+                                      ItemContainerStyle="{StaticResource GridViewItem}" 
+                                      SelectedItem="{Binding SelectedTransactionLine}"                             
+                                      ItemsSource="{Binding TransactionLines}">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="true" ColumnHeaderContainerStyle="{StaticResource GridViewHeader}">
+                                    <GridViewColumn Header="Item Name" DisplayMemberBinding="{Binding Item.ItemCode}" Width="150"/>
+                                    <!--<GridViewColumn Header="Category" DisplayMemberBinding="{Binding Item.Category.DisplayName}"  Width="80"/>
+                                    <GridViewColumn Header="UOM" DisplayMemberBinding="{Binding Item.UnitOfMeasure.DisplayName}"  Width="80"/>-->
+
+                                    <!--<GridViewColumn Header="Unit Price" DisplayMemberBinding="{Binding EachPrice}" Width="100"/>-->
+                                    <GridViewColumn Header="Qty." DisplayMemberBinding="{Binding Unit}" Width="100"/>
+
+                                    <!--<GridViewColumn Header="Total Amount" DisplayMemberBinding="{Binding LinePrice}" Width="100"/>-->
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <!--</StackPanel>-->
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <telerik:RadBarcode128A Grid.Column="0" Foreground="White"
+                                                    Text="{Binding SelectedTransaction.TransactionNumber}" 
+                                                    HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
+                                                    Margin="10, 10, 10, 0" Height="40" Width="200"
+                                                    ShowChecksum="False"/>
+                            <StackPanel Grid.Column="1"  Orientation="Vertical">
+
+                                <Grid   
+                                    Margin="10,5" Background="#FF007ACC"
+                                    TextBlock.Foreground="White" 
+                                    TextBlock.FontFamily="Bookman Old Style" 
+                                    TextBlock.FontSize="14"
+                                    TextBlock.FontWeight="Normal"
+                                    HorizontalAlignment="Right">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock  Text="No. of Items:" Grid.Column="0" Grid.Row="0" 
+                                                HorizontalAlignment="Left" Margin="5"/>
+                                    <TextBlock  Grid.Column="1" Grid.Row="0" FontWeight="Bold" Margin="5"
+                                                FontSize="14" Text="{Binding TotalItemsCounted}" />
+                                    <TextBlock  Grid.Column="0" Grid.Row="1" Text="Total Cost:" Margin="5" />
+                                    <TextBlock  Grid.Column="1" Grid.Row="1" FontWeight="Bold" Margin="5"
+                                                FontSize="14" Text="{Binding TotalItemsValue}" />
+
+                                    <!--<TextBlock Grid.Column="0" Grid.Row="2"  Text="Total Paid:" 
+                                           HorizontalAlignment="Left" Margin="5" />
+                                <TextBlock Grid.Column="1" Grid.Row="2" FontWeight="Bold" Margin="5"
+                                               FontSize="14" Text="{Binding SelectedTransaction.TotalPaid}" />
+                                <TextBlock Grid.Column="0" Grid.Row="3"  Text="Total Left:" Margin="5" />
+                                <TextBlock Grid.Column="1" Grid.Row="3" FontWeight="Bold" Margin="5"
+                                               FontSize="14" Text="{Binding SelectedTransaction.AmountLeft}" />-->
+
+
+                                </Grid>
+
+                                <ListView  x:Name="LstPayments" MinHeight="0" HorizontalAlignment="Right" 
+                                      ItemContainerStyle="{StaticResource GridViewItem}" Visibility="Visible" 
+                                      SelectedItem="{Binding SelectedPayment}"                            
+                                      ItemsSource="{Binding Payments}">
+                                    <ListView.View>
+                                        <GridView AllowsColumnReorder="true" ColumnHeaderContainerStyle="{StaticResource GridViewHeader}">
+                                            <GridViewColumn Header="Payment Date" DisplayMemberBinding="{Binding PaymentDateString}" Width="auto"/>
+                                            <GridViewColumn Header="Amount" DisplayMemberBinding="{Binding AmountString}"  Width="auto"/>
+                                            <GridViewColumn Header="By" DisplayMemberBinding="{Binding PaymentMethod}" Width="auto"/>
+                                            <GridViewColumn Header="Status" DisplayMemberBinding="{Binding StatusString}" Width="auto"/>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+
+
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Grid>
+
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
+

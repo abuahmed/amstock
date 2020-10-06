@@ -1,0 +1,177 @@
+﻿@using AMStock.Core.Common
+@using AMStock.Web.Models
+@model AMStock.Core.Models.ItemQuantityDTO
+
+@{
+    ViewBag.Title = @Model.Item.ItemDetail.ToLower() + " Details";
+}
+
+<h4>'(@Model.Warehouse.DisplayName) - @Model.Item.DisplayName (@Model.Item.ItemCode) ' Detail</h4>
+<hr />
+<div class="form-inline">
+    <div class="form-group">
+        @Html.LabelFor(model => model.Item.ItemCode, "Item Code")
+        @Html.TextBoxFor(model => model.Item.ItemCode, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Item.DisplayName, "Item Name")
+        @Html.TextBoxFor(model => model.Item.DisplayName, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Item.Category)
+        @Html.TextBoxFor(model => model.Item.CategoryString, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Item.UnitOfMeasure)
+        @Html.TextBoxFor(model => model.Item.UomString, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+
+    <div class="form-group ">
+        @Html.LabelFor(model => model.Item.Description)
+        @Html.TextBoxFor(model => model.Item.Description, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+</div>
+
+<div class="form-inline">
+    <div class="form-group">
+        @Html.LabelFor(model => model.Item.PurchasePrice)
+        @Html.TextBoxFor(model => model.Item.PurchasePrice, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Item.SellPrice)
+        @Html.TextBoxFor(model => model.Item.SellPrice, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Item.SafeQuantity)
+        @Html.TextBoxFor(model => model.Item.SafeQuantity, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+</div>
+
+<div class="form-inline">
+    <div class="form-group">
+        @Html.LabelFor(model => model.QuantityOnHand, "Quantity On Store")
+        @Html.TextBoxFor(model => model.QuantityOnHand, new { @class = "form-control", @disabled = "disabled" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.QuantityReserved)
+        @Html.TextBoxFor(model => model.QuantityReserved, new { @id = "QuantityReserved2", @class = "form-control", @disabled = "disabled" })
+    </div>
+    <div class="form-group">
+        @Html.Label(" ")
+        <a class="btn btn-primary form-control" data-toggle="modal" 
+           href="/OnHandInventory/ReserveItem?itemId=@Model.ItemId&warehouseId=@Model.WarehouseId" 
+           data-target="#feedback" ><i class="glyphicon glyphicon-save"></i>Reserve Item</a>
+    </div>
+</div>
+
+<div>
+    <h4>Sales History</h4>
+    @{Html.RenderPartial("~/Views/Shared/PartialTemplates/ItemTransactionHistory.cshtml", ViewData["SalesLines"]);}
+    <div class="chart-wrapper">
+        @(Html.Kendo().Chart<TransactionLineDetail>()
+          .Name("chartsales")
+          .Title("Daily Sales(Birr)")
+          .Legend(legend => legend
+              .Position(ChartLegendPosition.Bottom)
+          )
+          .DataSource(ds => ds.Read(read => read.Action("_ItemSalesHistory", "OnHandInventory", new { itemId = @Model.ItemId })))
+          .Series(series =>
+          {
+              series.Line(model => model.Unit).Name("Items Sold");//.Color("#b8b8b8")
+              //.Aggregate(ChartSeriesAggregate.Sum); 
+              //series.Column(model => model.NoOfItems).Name("NoOfItems");
+          })
+          .CategoryAxis(axis => axis
+              //.Date()
+              //.BaseUnit(ChartAxisBaseUnit.Days)
+              .Categories(model => model.TransactionDateString)
+                      .Labels(labels => labels.Rotation(-90))
+                      .MajorGridLines(lines => lines.Visible(false))
+          )
+          .ValueAxis(axis => axis
+              .Numeric()
+              .Line(line => line.Visible(false))
+              .MajorUnit(1)
+          )
+                //.ValueAxis(axis => axis.Numeric()
+                //    .Labels(labels => labels.Format("{0:N0}"))
+                //    .MajorUnit(1000)
+                //    .Line(line => line.Visible(false))
+                //)
+          .ChartArea(chartArea => chartArea
+            .Background("transparent")
+        )
+          .Tooltip(tooltip => tooltip
+              .Visible(true)
+              .Format("{0:N0}")
+              .Template("#= series.name #: #= value #")
+          )
+          )
+    </div>
+    <div class="clear-fix"></div>
+    <div class="clear-fix"></div>
+
+    <h4>Purchase History</h4>
+    @{Html.RenderPartial("~/Views/Shared/PartialTemplates/ItemTransactionHistory.cshtml", ViewData["PurchaseLines"]);}
+    <div class="chart-wrapper">
+        @(Html.Kendo().Chart<TransactionViewModel>()
+          .Name("chartpurchase")
+          .Title("Daily Sales(Birr)")
+          .Legend(legend => legend
+              .Position(ChartLegendPosition.Bottom)
+          )
+          .DataSource(ds => ds.Read(read => read.Action("_DailySales", "Transaction")))
+          .Series(series =>
+          {
+              series.Area(model => model.Amount).Name("Amount").Color("#f3ac32");
+              //.Aggregate(ChartSeriesAggregate.Sum); 
+              //series.Column(model => model.NoOfItems).Name("NoOfItems");
+          })
+          .CategoryAxis(axis => axis
+              //.Date()
+              //.BaseUnit(ChartAxisBaseUnit.Days)
+              .Categories(model => model.DateOf)
+                      .Labels(labels => labels.Rotation(-90))
+                      .MajorGridLines(lines => lines.Visible(false))
+          )
+          .ValueAxis(axis => axis
+              .Numeric()
+              .Line(line => line.Visible(false))
+          )
+                //.ValueAxis(axis => axis.Numeric()
+                //    .Labels(labels => labels.Format("{0:N0}"))
+                //    .MajorUnit(1000)
+                //    .Line(line => line.Visible(false))
+                //)
+          .ChartArea(chartArea => chartArea
+            .Background("transparent")
+        )
+          .Tooltip(tooltip => tooltip
+              .Visible(true)
+              .Format("{0:N0}")
+              .Template("#= series.name #: #= value #")
+          )
+          )
+    </div>
+</div>
+
+<div id="feedback" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+     data-url="@Url.Action("ReserveItem", new { id = @Model.Id })" >
+</div>
+
+@*<p>
+    Show here:-
+    <ul>
+        <li>sales history chart besides the list(may be weekly or daily)</li>
+        <li>purchase history chart besides the list(may be weekly or daily)</li>
+    </ul>
+</p>*@
+
+<script type="text/javascript">
+    $('#ohimenu').addClass('active');
+</script>

@@ -1,0 +1,238 @@
+﻿<Window x:Class="AMStock.WPF.Views.AddressEntry"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:extensions="clr-namespace:AMStock.Core.Extensions;assembly=AMStock.Core"
+        xmlns:model="clr-namespace:AMStock.Core.Enumerations;assembly=AMStock.Core"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+        mc:Ignorable="d"
+        Title="Address" Height="480" Width="620" Name="WdwAddress"
+        WindowStartupLocation="CenterScreen" Margin="0,0,0,0" ResizeMode="NoResize"
+        DataContext="{Binding Address, Source={StaticResource Locator}}"
+        Background="Transparent" WindowStyle="ThreeDBorderWindow" Closing="AddressEntry_OnClosing"
+        Icon="/AMStock.WPF;component/Resources/AppIcon.ico" Loaded="Window_Loaded" Initialized="WdwAddress_Initialized" >
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/MainSkin.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ControlsDictionary.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ListViewDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
+    </Window.Resources>
+
+    <Grid x:Name="LayoutRoot">
+        <Border Style="{StaticResource mainBorder}" CornerRadius="0" 
+                TextBlock.FontFamily="Bookman old style" TextBlock.Foreground="White">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+               
+                <Grid Grid.Row="1">
+                    <Grid Margin="2,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="2"/>
+                            <RowDefinition Height="35"/>
+                        </Grid.RowDefinitions>
+
+                        <Expander Grid.Row="0" Margin="5,0" Header="Basic" 
+                                  IsExpanded="True" TextBlock.Foreground="White">
+                               <Grid>
+                                    <Grid Margin="5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="30"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Address:" VerticalAlignment="Center" ToolTip="(Street No/Building Name/No.)"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" x:Name="TxtStreetAddress" TextWrapping="Wrap"   ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtStreetAddress}" 
+                                                     Text="{Binding SelectedAddress.AddressDetail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error" Grid.RowSpan="2" Margin="0,3" />
+
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Mobile*:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="2"  x:Name="TxtMobile"  Grid.Column="1" 
+                                                     ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtMobile}" 
+                                                     Text="{Binding SelectedAddress.Mobile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error" Margin="0,3" />
+                                        <TextBlock Grid.Row="2" Grid.Column="2" Text=" Mobile2:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="2"  x:Name="TxtMobile2"  Grid.Column="3" 
+                                                     ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtMobile2}" 
+                                                     Text="{Binding SelectedAddress.AlternateMobile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error" Margin="0,3" />
+
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Telephone:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="3" x:Name="TxtTelephone" Grid.Column="1" 
+                                                     ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtTelephone}" 
+                                                     Text="{Binding SelectedAddress.Telephone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error"  Margin="0,3" />
+
+                                    <TextBlock Grid.Row="3" Grid.Column="2" Text=" Telephone2:" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="3" x:Name="TxtTelephoneAlt" Grid.Column="3" 
+                                                     ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtTelephoneAlt}" 
+                                                     Text="{Binding SelectedAddress.AlternateTelephone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error"  Margin="0,3" />
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Email:" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="4"  x:Name="TxtEmail"  Grid.Column="1" 
+                                                     ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtEmail}" 
+                                                     Text="{Binding SelectedAddress.PrimaryEmail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error" Margin="0,3" />
+                                        
+                                    <TextBlock Grid.Row="4" Grid.Column="2" Text=" Email2:" VerticalAlignment="Center"/>
+                                        <TextBox Grid.Row="4"  x:Name="TxtEmail2"  Grid.Column="3" 
+                                                     ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtEmail2}" 
+                                                     Text="{Binding SelectedAddress.AlternateEmail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error" Margin="0,3" />
+
+                                    </Grid>
+                                    
+                                </Grid>
+                        </Expander>
+
+                        <Expander Grid.Row="1" Margin="5,0" Header="More Detail" IsExpanded="True"
+                                  TextBlock.Foreground="White">
+                            <Grid Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Country:" VerticalAlignment="Center"/>
+                                <ComboBox x:Name="CmbCountry" Grid.Column="1" Grid.Row="0" 
+                                          Margin="0,2" SelectedIndex="0"
+                                          SelectedValue="{Binding SelectedAddress.Country, Mode=TwoWay}" VerticalContentAlignment="Center"
+                                          ItemsSource="{Binding Source={extensions:Enumeration {x:Type model:CountryList}}, Mode=OneWay}" 
+                                          Validation.ErrorTemplate="{x:Null}"  Background="Transparent"
+                                          DisplayMemberPath="Description" 
+                                          SelectedValuePath="Value"/>
+
+                                <TextBlock Grid.Row="0" Grid.Column="2" Text=" City:" VerticalAlignment="Center"/>
+                                <Grid Grid.Row="0" Grid.Column="3" Margin="0,2,0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox    Margin="0" VerticalContentAlignment="Center" 
+								        x:Name="CmbLocalCity" Background="Transparent"                                          
+								        ItemsSource="{Binding Cities, Mode=OneWay}"
+								        SelectedItem="{Binding SelectedCity}" 
+								        DisplayMemberPath="Display"/>
+                                    <telerik:RadButton Grid.Column="1" Content=" + " 
+                                                       Width="25" Command="{Binding CityListEnglishViewCommand}"/>
+                                </Grid>
+                               
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Region:" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="1" x:Name="TxtRegion" Grid.Column="1"  ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtRegion}" 
+                                                     Text="{Binding SelectedAddress.Region, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error" Height="24" Margin="0,3" />
+
+                                <TextBlock Grid.Row="1" Grid.Column="2" Text=" Sub City:" VerticalAlignment="Center" />
+                                <Grid Grid.Row="1" Grid.Column="3" Margin="0,2,0,2" >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox    Margin="0" VerticalContentAlignment="Center"
+								        x:Name="CmbSubCity" Background="Transparent"                                          
+								        ItemsSource="{Binding SubCities, Mode=OneWay}"
+								        SelectedItem="{Binding SelectedSubCity}"
+								        DisplayMemberPath="Display"/>
+                                    <telerik:RadButton Grid.Column="1" Content=" + " 
+                                                       Width="25" Command="{Binding SubCityListViewCommand}"/>
+                                </Grid>
+
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Woreda:" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="2" x:Name="TxtWoreda" Grid.Column="1"  ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtWoreda}" 
+                                                     Text="{Binding SelectedAddress.Woreda, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error" Height="24" Margin="0,3" />
+
+                                <TextBlock Grid.Row="2" Grid.Column="2" Text=" Kebele:" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="2" x:Name="TxtKebele" Grid.Column="3"  ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtKebele}" 
+                                                     Text="{Binding SelectedAddress.Kebele, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error" Height="24" Margin="0,3" />
+
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Street No:" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="3" x:Name="TxtStreetNo" Grid.Column="1"  ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtStreetNo}" 
+                                                     Text="{Binding SelectedAddress.StreetAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error" Height="24" Margin="0,3" />
+                                
+                                <TextBlock Grid.Row="3" Grid.Column="2" Text=" House No:" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="3" x:Name="TxtHouseNo" Grid.Column="3"  ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtHouseNo}" 
+                                                     Text="{Binding SelectedAddress.HouseNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error" Height="24" Margin="0,3" />
+
+                                <TextBlock Grid.Row="4" Grid.Column="0" Text="P.O.Box:" VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="4" x:Name="TxtPoBox" Grid.Column="1" ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtPoBox}" 
+                                                     Text="{Binding SelectedAddress.PoBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error"  Margin="0,3" />
+
+                                <TextBlock Grid.Row="4" Grid.Column="2" Text=" Fax:" VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="4" x:Name="TxtFax" Grid.Column="3" ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtFax}" 
+                                                     Text="{Binding SelectedAddress.Fax, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error"  Margin="0,3" />
+
+                                <TextBlock Grid.Row="5" Grid.Column="0" Text="Notes:" VerticalAlignment="Center" />
+                                <TextBox Grid.Row="5" x:Name="TxtMoreNote" Grid.Column="1" Grid.ColumnSpan="3" ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtMoreNote}" 
+                                                     Text="{Binding SelectedAddress.MoreNote, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error"  Margin="0,3" />
+
+                            </Grid>
+                        </Expander>
+
+                        <Grid Grid.Row="2"></Grid>
+
+                        <GridSplitter Grid.Row="3" HorizontalAlignment="Stretch" />
+                        
+                        <StackPanel Orientation="Horizontal" Grid.Row="4" 
+                                    Background="Transparent" HorizontalAlignment="Right">
+                            
+                            <telerik:RadButton Content="_OK" Tag="Save" x:Name="BtnSave"
+                                    Command="{Binding SaveAddressViewCommand}"  IsDefault="True"
+                                    CommandParameter="{Binding ElementName=WdwAddress}" 
+                                     />
+
+                            <telerik:RadButton Content="_Reset" Tag="Reset" x:Name="BtnReset"
+                                    Command="{Binding ResetAddressViewCommand}" 
+                                    CommandParameter="{Binding ElementName=BtnReset}"                                     
+                                    />
+
+                            <telerik:RadButton Content="_Cancel" Tag="Close" x:Name="BtnClose"
+                                    Command="{Binding CloseAddressViewCommand}" 
+                                    CommandParameter="{Binding ElementName=BtnClose}"                                     
+                                    />
+
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

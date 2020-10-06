@@ -1,0 +1,55 @@
+﻿@model IEnumerable<AMStock.Core.Models.TransactionLineDTO>
+
+<h4>List of Items</h4>
+<table class="table table-striped table-condensed table-hover ">
+
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.SerialNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Item.ItemCode)
+        </th>
+        <th>Item Name
+        </th>
+     
+        <th style="text-align: right;">
+            @Html.DisplayNameFor(model => model.EachPrice)
+        </th>
+        <th style="text-align: right;">
+            @Html.DisplayNameFor(model => model.Unit)
+        </th>
+        <th style="text-align: right;">
+            @Html.DisplayNameFor(model => model.LinePrice)
+        </th>
+       
+    </tr>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SerialNumber)
+                </td>
+                
+                <td>
+                    @Html.ActionLink(@Html.DisplayFor(model => item.Item.ItemCode).ToString(), "Details","OnHandInventory", new { itemId = item.ItemId,warehouseId=item.Transaction.WarehouseId, type = @ViewData["BpType"] },null)
+                    
+                </td>
+                <td>
+                     @Html.ActionLink(@Html.DisplayFor(model => item.Item.DisplayName).ToString(), "Details","OnHandInventory", new { itemId = item.ItemId,warehouseId=item.Transaction.WarehouseId, type = @ViewData["BpType"] },null)
+                </td>
+             
+                <td style="text-align: right;">
+                    @Html.DisplayFor(modelItem => item.EachPrice)
+                </td>
+                <td style="text-align: right;">
+                    @Html.DisplayFor(modelItem => item.Unit)
+                </td>
+                 <td style="text-align: right;">
+                    @Html.DisplayFor(modelItem => item.LinePrice)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

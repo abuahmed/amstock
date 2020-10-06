@@ -1,0 +1,250 @@
+﻿<Window x:Class="AMStock.WPF.Views.Warehouses"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        mc:Ignorable="d" WindowStyle="ThreeDBorderWindow" x:Name="WdwWarehouses"
+        Title="Stores/Shops..." Height="600" Width="700" 
+        WindowStartupLocation="CenterScreen" Margin="0,20,0,0" 
+        DataContext="{Binding Warehouse, Source={StaticResource Locator}}"
+        Background="Transparent" AllowsTransparency="False" Closing="Warehouses_OnClosing"
+        Icon="/AMStock.WPF;component/Resources/AppIcon.ico">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/MainSkin.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ControlsDictionary.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ListViewDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
+    </Window.Resources>
+
+    <Grid x:Name="LayoutRoot" TextBlock.FontFamily="Bookman old style"
+          TextBlock.Foreground="White">
+        <Border Style="{StaticResource mainBorder}" CornerRadius="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="1" Margin="5,0"
+                            Orientation="Horizontal" HorizontalAlignment="Right" 
+                            Background="Transparent">
+                </StackPanel>
+
+                <Grid Grid.Row="2">
+                    <Grid Margin="2,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="2"/>
+                            <RowDefinition Height="40"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5,0">
+                            <TextBlock VerticalAlignment="Center" Text="Organization:"/>
+                            <ComboBox ItemsSource="{Binding Organizations, Mode=OneWay}" Width="200"  
+                                                          DisplayMemberPath="DisplayName"
+                                                          VerticalContentAlignment="Center"
+                                                          Background="Transparent" Margin="0,2"
+                                                          SelectedItem="{Binding SelectedOrganization}" />
+                        </StackPanel>
+                            <ListView x:Name="ListView" Grid.Row="1"
+                                  ItemContainerStyle="{StaticResource GridViewItem}" 
+                                  SelectedItem="{Binding SelectedWarehouse}"                            
+                                  ItemsSource="{Binding Warehouses}">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="true" ColumnHeaderContainerStyle="{StaticResource GridViewHeader}">
+                                    <GridViewColumn Header="Store Name" DisplayMemberBinding="{Binding DisplayName}"  Width="auto"/>
+                                    <GridViewColumn Header="Tin No." DisplayMemberBinding="{Binding TinNumber}"  Width="auto"/>
+                                    <GridViewColumn Header="Is Default" DisplayMemberBinding="{Binding IsDefaultYesNo}" Width="auto"/>
+                                    <GridViewColumn Header="Address" DisplayMemberBinding="{Binding Address.StreetAddress}" Width="200" />
+                                    <GridViewColumn Header="Tel." DisplayMemberBinding="{Binding Address.Telephone}" Width="Auto" />
+                                    <GridViewColumn Header="Mobile" DisplayMemberBinding="{Binding Address.Mobile}" Width="Auto" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                        <Expander Grid.Row="2" Header="Detail" IsExpanded="True" TextBlock.Foreground="White" >
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="5"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid Grid.Column="0" Margin="5" >
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" VerticalAlignment="Center"/>
+                                    <TextBox x:Name="TxtWarehouseName" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"
+                                             IsEnabled="{Binding StoreNameEnability}" 
+                                             Text="{Binding SelectedWarehouse.DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True,NotifyOnValidationError=True}"
+                                             ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtWarehouseName}" 
+                                             Validation.Error="Validation_Error" 
+                                             Margin="0,3" />
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Tin Number:" VerticalAlignment="Center"/>
+                                    <TextBox x:Name="TinNumBox" Grid.Row="1" Grid.Column="1" Margin="0,3" 
+                                             ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TinNumBox}" 
+                                             Text="{Binding SelectedWarehouse.TinNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                             Validation.Error="Validation_Error"  />
+                                    
+                                    <!--<TextBlock Grid.Row="1" Grid.Column="2" Text="VAT Number:" VerticalAlignment="Center"/>
+                                    <TextBox x:Name="VatNumBox" Grid.Row="1" Grid.Column="3" Margin="0,3" 
+                                             ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=VatNumBox}" 
+                                             Text="{Binding SelectedWarehouse.VatNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                             Validation.Error="Validation_Error"  />-->
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="More Description:"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3"
+                                             Text="{Binding SelectedWarehouse.Description}" TextWrapping="Wrap" Margin="0,3" />
+
+
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Store Number:" VerticalAlignment="Center"/>
+                                    <TextBox x:Name="TxtWarehouseNum" Grid.Row="4" Grid.Column="1" Margin="0,3" 
+                                             IsEnabled="{Binding StoreNameEnability}" 
+                                             ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtWarehouseNum}" 
+                                             Text="{Binding SelectedWarehouse.WarehouseNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                             Validation.Error="Validation_Error"  />
+                                    
+                                    <!--<CheckBox Grid.Row="5" Grid.Column="1" Content="Is Default" 
+                                              IsChecked="{Binding SelectedWarehouse.IsDefault, Mode=TwoWay}" 
+                                              VerticalAlignment="center" FontSize="14" Foreground="White"
+                                              IsEnabled="{Binding DefaultCheckBoxEnability}"/>-->
+
+                                    
+                                    
+                                </Grid>
+
+                                <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+
+                                <Grid Grid.Column="2">
+                                    <Expander Header="Address" HorizontalAlignment="Stretch" IsExpanded="True" TextBlock.Foreground="White" >
+                                        <Grid Margin="5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="City:" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="0" x:Name="TxtCity" Grid.Column="1" 
+                                                     ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtCity}" 
+                                                     Text="{Binding SelectedWarehouse.Address.City, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error" Margin="0,3" />
+
+                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Address:" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="1" x:Name="TxtStreetAddress"  Grid.Column="1" ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtStreetAddress}" 
+                                                     Text="{Binding SelectedWarehouse.Address.StreetAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error" Grid.RowSpan="2" Margin="0,3" TextWrapping="Wrap" />
+
+                                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Telephone:" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="3" x:Name="TxtTelephone" Grid.Column="1" ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtTelephone}" 
+                                                     Text="{Binding SelectedWarehouse.Address.Telephone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error"  Margin="0,3" />
+
+                                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Mobile:" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="4"  x:Name="TxtMobile"  Grid.Column="1" ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtMobile}" 
+                                                     Text="{Binding SelectedWarehouse.Address.Mobile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error" Margin="0,3" />
+
+                                            <TextBlock Grid.Row="5" Grid.Column="0" Text="Email:" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="5"  x:Name="TxtEmail"  Grid.Column="1" ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtEmail}" 
+                                                     Text="{Binding SelectedWarehouse.Address.PrimaryEmail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error" Margin="0,3" />
+
+                                        </Grid>
+                                    </Expander>
+                                </Grid>
+                            </Grid>
+                        </Expander>
+
+                        <Expander Grid.Row="3" Header="Bank Accounts" 
+                                  IsExpanded="False" Foreground="White" 
+                                  Visibility="Collapsed">
+                            
+                        </Expander>
+
+                        <Expander Grid.Row="4" Header="Letter Heads" 
+                                  IsExpanded="False" Foreground="White" >
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Row="0" Grid.Column="0" Content="Letter Head" Name="BtnLetterHeader"
+                                        Command="{Binding ShowLetterHeaderImageCommand}"
+                                        VerticalAlignment="Center" />
+                                <Image Grid.Row="0" Grid.Column="1" Name="ImgbtnLetterHeader"
+                                                Source="{Binding LetterHeadImage}" Stretch="Fill" />
+
+                                <Button Grid.Row="1" Grid.Column="0" Content="Letter Foot" Name="BtnLetterFooter"
+                                        Command="{Binding ShowLetterFooterImageCommand}"
+                                        VerticalAlignment="Center"/>
+                                <Image Grid.Row="1" Grid.Column="1"  Name="ImgbtnLetterFooter" 
+                                       Source="{Binding LetterFootImage}" Stretch="Fill"/>
+                            </Grid>
+                        </Expander>
+                        
+                      <GridSplitter Grid.Row="5" HorizontalAlignment="Stretch" />
+                        <StackPanel Orientation="Horizontal" Grid.Row="6" Background="Transparent" HorizontalAlignment="Right">
+
+                            <Button Content="_Add New" Tag="Add New" x:Name="BtnAddNew"
+                                    Command="{Binding AddNewWarehouseViewCommand}" Visibility="{Binding UserRoles.AddStores}"
+                                    IsEnabled="{Binding AddNewWarehouseEnability}"
+                                    CommandParameter="{Binding ElementName=BtnAddNew}"                                     
+                                    Style="{StaticResource bottomButtons}" Click="BtnAddNew_Click"/>
+
+                            <Button Content="_Save" Tag="Save" x:Name="BtnSave"
+                                    Command="{Binding SaveWarehouseViewCommand}" 
+                                    IsEnabled="{Binding AddNewWarehouseEnability}"
+                                    CommandParameter="{Binding ElementName=WdwWarehouses}"  
+                                    Style="{StaticResource bottomButtons}" IsDefault="True" />
+
+                            <!--<Button Content="_Delete" Tag="Delete" x:Name="btnDelete"
+                                    Command="{Binding DeleteWarehouseViewCommand}" 
+                                    CommandParameter="{Binding ElementName=btnDelete}"                                     
+                                    Style="{StaticResource bottomButtons}"/>-->
+                        </StackPanel>
+
+                    </Grid>
+                </Grid>
+
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

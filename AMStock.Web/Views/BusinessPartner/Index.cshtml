@@ -1,0 +1,77 @@
+﻿@model IEnumerable<AMStock.Core.Models.BusinessPartnerDTO>
+
+@{
+    ViewBag.Title = ViewData["BussinessPartnerType"];
+}
+<div style="text-align: center;">
+    <h4 style="font-size: 24px; font-weight: bold; color: orange; font-family: 'Bookman Old Style';"><i><b>SMART Trading PLC</b></i></h4>
+</div>
+<div class="clear-fix"></div>
+<div class="pull-left">
+    <h3>@ViewData["BussinessPartnerType"] (s) </h3>
+</div>
+
+<div class="pull-right hidden-print" style="margin-top: 20px;">
+    <i class="glyphicon glyphicon-search"></i>
+    <input class="input-sm" name="searchText" onkeydown="bpSearch(this)" placeholder="Search @ViewData["BussinessPartnerType"]" title="(by Code or Name)" style="width: 250px;" type="text"/>
+</div>
+
+<div class="clear-fix"></div>
+
+<div class="form-inline">
+    <div class="form-group">
+        @Html.Label("Credit Status")
+        @(Html.Kendo().DropDownList()
+              .Name("creditStatus")
+              .Events(e => e.Change("creditChange"))
+              .HtmlAttributes(new { style = "width: 250px" })
+              .BindTo((IEnumerable<SelectListItem>)ViewData["CreditFilter"])
+              )
+    </div>
+
+</div>
+
+@{Html.RenderPartial("~/Views/Shared/_businessPartner.cshtml");}
+
+<script type="text/javascript">
+    $('#bpmenu').addClass('active');
+
+    function bpSearch(ele) {
+
+        if (event.keyCode == 13) {
+            var searchText = ele.value;
+            $.ajax({
+                type: "GET",
+                url: "/BusinessPartner/Index",
+                data: { 'searchText': searchText,'type': @ViewData["BPType"] },
+                contentType: false,
+                async: false,
+                success: function(inventoryList) {
+                    $("#table_id").replaceWith(inventoryList);
+                },
+                error: function() {
+                    alert("Sorry, there was a problem!");
+                }
+            });
+        }
+    }
+
+    function creditChange() {
+        
+        var creditStatus = $("#creditStatus").data("kendoDropDownList").value();
+        //alert(creditStatus);
+        $.ajax({
+            type: "GET",
+            url: "/BusinessPartner/Index",
+            data: {'creditStatus': creditStatus, 'type': @ViewData["BPType"]},
+            contentType: false,
+            async: false,
+            success: function(inventoryList) {
+                $("#table_id").replaceWith(inventoryList);
+            },
+            error: function() {
+                alert("Sorry, there was a problem!");
+            }
+        });
+    }
+</script>

@@ -1,0 +1,145 @@
+﻿<Window x:Class="AMStock.WPF.Views.CalendarConvertor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+        mc:Ignorable="d" ResizeMode="NoResize"
+        Title="Calendar Convertor" Height="200" Width="540" x:Name="WdwReportDuration"
+        DataContext="{Binding Convertor, Source={StaticResource Locator}}"
+        Background="Transparent" AllowsTransparency="False" WindowStyle="ThreeDBorderWindow"
+        WindowStartupLocation="CenterScreen" Icon="/AMStock.WPF;component/Resources/AppIcon.ico">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/MainSkin.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ControlsDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+
+
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Border Style="{StaticResource mainBorder}" CornerRadius="0">
+            <Grid TextBlock.FontFamily="Bookman old style">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!--<StackPanel Grid.Row="0">
+                    <telerik:RadButton x:Name="btnClose" 
+                            Style="{StaticResource closeWindowButtons}"
+                            IsCancel="True"/>
+
+                    <TextBlock Text="{Binding DurationHeader}" Margin="3,-20,0,0"
+                           Style="{StaticResource windowTextBlockHeader}"  />
+                </StackPanel>-->
+
+                <Grid Grid.Row="1" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>                   
+                    <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="9" Margin="3">
+                        <TextBlock Text="Gregorian Calendar" Foreground="White" FontWeight="Normal" FontSize="16" />
+                        <!--<Separator Background="White" Margin="0"/>-->
+                    </StackPanel>
+
+
+                    <ComboBox Grid.Column="0"  Grid.Row="1" Grid.ColumnSpan="2"
+                              ItemsSource="{Binding GregorMonths}" 
+                              SelectedItem="{Binding SelectedGregorMonth}"
+                              DisplayMemberPath="Display" 
+                              VerticalContentAlignment="Center"
+                              SelectedIndex="0" FontSize="14"
+                              Background="Transparent" />
+                    <ComboBox Grid.Column="2"  Grid.Row="1" Grid.ColumnSpan="2"
+                              ItemsSource="{Binding GregorDays}" SelectedItem="{Binding SelectedGregorDay}"
+                               DisplayMemberPath="Display" 
+                              VerticalContentAlignment="Center"
+                              SelectedIndex="0" FontSize="14"
+                              Background="Transparent" />
+                    <ComboBox Grid.Column="4"  Grid.Row="1" Grid.ColumnSpan="2"
+                              ItemsSource="{Binding GregorYears}" SelectedItem="{Binding SelectedGregorYear}"
+                               DisplayMemberPath="Display" 
+                              VerticalContentAlignment="Center"
+                              SelectedIndex="0" FontSize="14"
+                              Background="Transparent" />
+
+                    
+                    
+                    
+                        
+                    <TextBlock Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="4" 
+                               Text="Ethiopian Calendar" Foreground="White" 
+                               FontWeight="Normal" FontSize="16" Margin="0,10,0,0" />
+                    <telerik:RadButton Content="Convert To EC" Grid.Column="7" Grid.Row="1" FontSize="14"
+                            Grid.ColumnSpan="2" Margin="0" Width="auto" Command="{Binding ConvertDateToEthioCommand}"/>
+                    <!--<Separator Background="White" Grid.Column="0" Grid.Row="2" 
+                               Grid.ColumnSpan="9" VerticalAlignment="Bottom"/>-->
+
+                    <ComboBox Grid.Column="0"  Grid.Row="3" Grid.ColumnSpan="2"
+                              ItemsSource="{Binding EthioMonths}" SelectedItem="{Binding SelectedEthioMonth}"
+                              DisplayMemberPath="Display" 
+                              VerticalContentAlignment="Center"
+                              SelectedIndex="0" FontSize="14"
+                              Background="Transparent" />
+                    <ComboBox Grid.Column="2"  Grid.Row="3" Grid.ColumnSpan="2"
+                              ItemsSource="{Binding EthioDays}" SelectedItem="{Binding SelectedEthioDay}"
+                              DisplayMemberPath="Display" 
+                              VerticalContentAlignment="Center"
+                              SelectedIndex="0" FontSize="14"
+                              Background="Transparent" />
+                    <ComboBox Grid.Column="4"  Grid.Row="3" Grid.ColumnSpan="2"
+                              ItemsSource="{Binding EthioYears}" SelectedItem="{Binding SelectedEthioYear}"
+                              DisplayMemberPath="Display" 
+                              VerticalContentAlignment="Center"
+                              SelectedIndex="0" FontSize="14"
+                              Background="Transparent" />
+
+                    <telerik:RadButton Content="Convert To GC" Grid.Column="7" Grid.Row="3" FontSize="14"
+                            Grid.ColumnSpan="2" Margin="0" Width="auto" Command="{Binding ConvertDateToGregorCommand}" />
+                   
+
+                </Grid>
+
+                <!--<GridSplitter Grid.Row="2" Height="3" HorizontalAlignment="Stretch" />-->
+
+                <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Top" Margin="0,5,0,5" HorizontalAlignment="Right">
+                    
+                    <!--<telerik:RadButton Content="_Close" 
+                            IsCancel="True"
+                            CommandParameter="{Binding ElementName=WdwReportDuration}" 
+                            Padding="10,0" 
+                            Height="30" 
+                            Margin="10,0,0,0"/>-->
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
+
+
+
+

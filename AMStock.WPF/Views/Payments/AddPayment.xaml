@@ -1,0 +1,134 @@
+﻿<Window x:Class="AMStock.WPF.Views.AddPayment"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+        AllowDrop="True"
+        Title="Add Payment" WindowStartupLocation="CenterScreen" WindowStyle="ThreeDBorderWindow"
+        Background="Transparent" AllowsTransparency="False" x:Name="WdwAddPayment"
+        DataContext="{Binding AddPayment, Source={StaticResource Locator}}"
+        Height="380" Width="440" Icon="/AMStock.WPF;component/Resources/AppIcon.ico" ResizeMode="NoResize" 
+        Loaded="WdwAddPayment_Loaded">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/MainSkin.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ControlsDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Border Style="{StaticResource mainBorder}" CornerRadius="0" >
+            <Grid ShowGridLines="False" TextBlock.FontSize="14" Margin="5" 
+                  TextBlock.FontStretch="Expanded">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="3"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="1" Margin="5" 
+                      TextBlock.Foreground="White"
+                      TextBlock.FontFamily="Bookman old style" TextBlock.FontSize="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="For Shop:" Grid.Row="0" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Warehouse.DisplayName}"  
+                               Foreground="Black" IsEnabled="False"
+                               VerticalContentAlignment="Center" Margin="0,2"/>
+
+                    <TextBlock Text="From/To:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding BusinessPartner.DisplayName}"  
+                             Foreground="Black" IsEnabled="False"
+                             VerticalContentAlignment="Center" Margin="0,2"/>
+                    <TextBlock Text="Amount Required:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SelectedPaymentModel.AmountRequired}"  
+                               Foreground="Black" IsEnabled="False"
+                               VerticalContentAlignment="Center" Margin="0,2"/>
+
+                    <GridSplitter Grid.Row="3" Height="3" Grid.ColumnSpan="2" Grid.Column="0"
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+
+                    <TextBlock Text="Payment Date:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
+                    <telerik:RadDateTimePicker   Grid.Column="1" Grid.Row="4" x:Name="dtPaymentDate"                                        
+									ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=dtPaymentDate}" 
+									SelectedValue="{Binding SelectedPaymentModel.PaymentDate, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+									Validation.Error="Validation_Error"
+									VerticalAlignment="Center"/>
+                    <TextBlock Text="Cash Amount To Pay: " Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
+                    <TextBox x:Name="TxtCashAmount" Grid.Row="5" Grid.Column="1" Margin="0,2" 
+                                 ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtCashAmount}" 
+                                 Text="{Binding SelectedPaymentModel.Amount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                 Validation.Error="Validation_Error" VerticalContentAlignment="Center" TextAlignment="Right" />
+                    <TextBlock Text="Left (For Credit) : " Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
+                    <Grid Grid.Row="6" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding SelectedPaymentModel.AmountLeft}"  
+                               Foreground="Black" IsEnabled="False" TextAlignment="Right"
+                               VerticalContentAlignment="Center" Margin="0,2"/>
+                        <Button Content="_Add Check" Grid.Row="0" Grid.Column="1"
+                            Command="{Binding AddCheckCommand}" 
+                            x:Name="BtnCheque" 
+                            Visibility="{Binding SelectedPaymentModel.CreditVisibility,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                            CommandParameter="{Binding ElementName=WdwAddPayment}" 
+                            Padding="10,0" Margin="2,0,0,0" />
+                    </Grid>
+
+
+                    <TextBlock Text="Change: " Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding SelectedPaymentModel.Change}"  
+                               Foreground="Black" IsEnabled="False" TextAlignment="Right"
+                               VerticalContentAlignment="Center" Margin="0,2"/>
+
+                    <TextBlock Text="{Binding SelectedCheck.CheckDetail}" Grid.Row="8" Grid.Column="1" 
+                               VerticalAlignment="Center"/>
+
+                    <!--<CheckBox Content="Put Left money as Credit" IsChecked="{Binding CreditWithoutCheck}" 
+                              Grid.Row="8" Grid.Column="1" Foreground="White" IsEnabled="{Binding CreditEnability}"
+                              VerticalAlignment="Center"/>-->
+
+                </Grid>
+                <GridSplitter Grid.Row="2" Height="3" HorizontalAlignment="Stretch" />
+
+                <StackPanel Grid.Row="3" Margin="0,5,0,5" Orientation="Horizontal" 
+                            VerticalAlignment="Top"  
+                            HorizontalAlignment="Right">
+                    <Button Content=" _Save " 
+                            Command="{Binding SavePaymentViewCommand}" 
+                            x:Name="BtnSaveClose" 
+                            CommandParameter="{Binding ElementName=WdwAddPayment}" 
+                            Height="30" Padding="10,0" Margin="10,0,0,0" 
+                            IsDefault="True"/>
+
+                    <Button Content="_Cancel" 
+                            Command="{Binding ClosePaymentViewCommand}" 
+                            CommandParameter="{Binding ElementName=WdwAddPayment}" 
+                            Padding="10,0" Height="30" Margin="10,0,0,0"
+                            IsCancel="True"/>
+
+                </StackPanel>
+
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
+

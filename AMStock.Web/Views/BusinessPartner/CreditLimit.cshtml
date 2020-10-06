@@ -1,0 +1,121 @@
+﻿@model AMStock.Core.Models.BusinessPartnerDTO
+
+<style>
+    .modal-content {
+        background-image: url(/Images/bg.png);
+        font-family: 'Bookman Old Style';
+    }
+
+    .modal-dialog {
+        left: 0;
+    }
+
+    .page-header {
+        margin: 10px 0 10px;
+    }
+
+    .modal-header {
+        padding: 1px;
+    }
+
+    .modal-footer {
+        padding: 1px;
+    }
+</style>
+
+<script type="text/javascript">
+    $("form").submit(function (e) {
+
+        if (!$(this).valid()) {
+            e.preventDefault();
+        }
+        else {
+            var params = new Object();
+            params.bpId = $("#Id").val();
+            params.creditLimit = $("#CreditLimit").val();
+            params.maxNoCreditTransactions = $("#MaxNoCreditTransactions").val();
+
+            $.ajax({
+                type: "POST",
+                url: "/BusinessPartner/SaveCreditLimit/",
+                beforeSend: function () { $('#loadingDiv').show(); },
+                complete: function () { $('#loadingDiv').hide(); },
+                data: JSON.stringify(params),
+                contentType: "application/json",
+                async: false,
+                success: function (successfull) {
+                    if (!successfull) {
+                        alert("Problem Occured while Adding Reservation, Please try Again!");
+                        e.preventDefault();
+                    }
+                },
+                error: function () {
+                    alert("Problem Occured while Adding Reservation, Please try Again!");
+                    e.preventDefault();
+                }
+            });
+            return true;
+        } return true;
+    });
+</script>
+
+
+<div style="padding: 10px;" class="modal-content modal-dialog modal-body">
+    <form method="post" id="reserve">
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.DisplayName)
+
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 id="myModalLabel">' @Model.DisplayName ' Credit Limit</h4>
+        </div>
+        
+        <div class="form-inline">
+            <div class="form-group ">
+                @Html.LabelFor(model => model.TotalCreditString, "Outstanding Credit")
+                @Html.TextBoxFor(model => model.TotalCreditString, new { @class = "form-control", @disabled = "disabled" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CreditLimit)
+                @Html.TextBoxFor(model => model.CreditLimit, new { @class = "form-control" })
+
+            </div>
+        </div>
+
+        <div class="form-inline">
+            <div class="form-group ">
+                @Html.LabelFor(model => model.TotalNoOfOutstandingTransactions, "Outstanding Transactions")
+                @Html.TextBoxFor(model => model.TotalNoOfOutstandingTransactions, new { @class = "form-control", @disabled = "disabled" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.MaxNoCreditTransactions)
+                @Html.TextBoxFor(model => model.MaxNoCreditTransactions, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MaxNoCreditTransactions)
+            </div>
+        </div>
+        
+        <div class="modal-footer">
+            <div class="pull-left">
+                <div id='loadingDiv'>
+                    Please wait...
+                    <img src="~/Images/loading-image.gif" />
+                </div>
+            </div>
+
+            <div class="pull-right ">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                <input type="submit" id="reserveItem2" value="Save changes" class="btn btn-warning active" />
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse("#reserve");
+        $('#loadingDiv').hide();
+    });
+</script>

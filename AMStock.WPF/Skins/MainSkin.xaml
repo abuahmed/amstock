@@ -1,0 +1,141 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <Style TargetType="UserControl">
+        <Setter Property="Margin" Value="20,0"/>
+    </Style>
+    <Style x:Key="TabControlBackground" TargetType="TabControl">
+        
+        <Setter Property="BorderBrush" Value="LightGray"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Padding" Value="5"/>
+        <!--<Setter Property="Background" Value="LightSlateGray"/>-->
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF007ACC" Offset="0"/>
+                    <GradientStop Color="#FF7ABAE5" Offset="0.799"/>
+                    <GradientStop Color="#FF7ABAE5" Offset="0.995"/>
+                    <GradientStop Color="#FF007ACC" Offset="0.089"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="mainBorder" TargetType="Border">
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="BorderBrush" Value="LightGray"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Padding" Value="5"/>
+        <!--<Setter Property="Background" Value="LightSlateGray"/>-->
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF007ACC" Offset="0"/>
+                    <GradientStop Color="#FF7ABAE5" Offset="0.799"/>
+                    <GradientStop Color="#FF7ABAE5" Offset="0.995"/>
+                    <GradientStop Color="#FF007ACC" Offset="0.089"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="mainBorder0" TargetType="Border">
+        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="BorderBrush" Value="LightGray"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Margin" Value="5,0"/>
+        <Setter Property="Padding" Value="5"/>
+        <!--<Setter Property="Background" Value="LightSlateGray"/>-->
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF007ACC" Offset="0.821"/>
+                    <GradientStop Color="#FF76A4C3" Offset="0.068"/>
+                    <GradientStop Color="#FF7ABAE5" Offset="0.163"/>
+                    <GradientStop Color="#FF007ACC" Offset="0.012"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="mainBorder2" TargetType="Border">
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="BorderBrush" Value="LightGray"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Padding" Value="5"/>
+        <!--<Setter Property="Background" Value="LightSlateGray"/>-->
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF007ACC" Offset="0"/>
+                    <GradientStop Color="#FF7ABAE5" Offset="0.799"/>
+                    <GradientStop Color="#FF7ABAE5" Offset="0.995"/>
+                    <GradientStop Color="#FF007ACC" Offset="0.089"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="mainBorder3" TargetType="Border">
+        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="BorderBrush" Value="LightGray"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="Padding" Value="2"/>
+        <Setter Property="Width" Value="350"/>
+        <Setter Property="Background" Value="#FF007ACC"/>
+        <!--<Setter Property="Background" Value="LightSlateGray"/>-->
+        <!--<Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF007ACC" Offset="0"/>
+                    <GradientStop Color="#FF7ABAE5" Offset="0.799"/>
+                    <GradientStop Color="#FF7ABAE5" Offset="0.995"/>
+                    <GradientStop Color="#FF007ACC" Offset="0.089"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>-->
+    </Style>
+    <Style x:Key="windowTextBlockHeader" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Margin" Value="10,-10,0,0"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <!--<Setter Property="Background" Value="LightSlateGray"/>-->
+    </Style>
+    <Style x:Key="userControlTextBlockHeader" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Margin" Value="0,5,0,0"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <!--<Setter Property="Background" Value="LightSlateGray"/>-->
+    </Style>
+    <Style x:Key="searchLabel" TargetType="Label">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Margin" Value="10,0,0,0"/>
+
+    </Style>
+    <Style x:Key="searchTextBox" TargetType="TextBox">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Margin" Value="0,0,0,0"/>
+        <Setter Property="Width" Value="275"/>   
+    </Style>
+</ResourceDictionary>

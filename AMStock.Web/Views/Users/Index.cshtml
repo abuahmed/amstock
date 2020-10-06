@@ -1,0 +1,106 @@
+﻿@model IEnumerable<AMStock.Core.Models.UserDTO>
+
+@{
+    ViewBag.Title = "Users";
+}
+
+<h3>System Users List</h3>
+
+<div id="table_id">
+    <div id="spinner">
+    </div>
+
+    <div>
+        <span>@ViewData["UserSearch"]</span>
+    </div>
+    @ViewData["totalNumber"] users (s) found
+    
+    <div class="clear-fix"></div>
+    @Html.ActionLink("Add New User", "Details", "Users", new { id = 0 }, new { @Class = "btn btn-primary" })
+
+    <table class="table table-striped table-condensed table-hover">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SerialNumber)
+            </th>
+            <th>@Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th style="text-align: center;" class="hidden-print hidden-phone"></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SerialNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.ActionLink(@Html.DisplayFor(modelItem => item.UserName).ToString(), "Details", "Users", new { id = item.UserId }, null)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                 <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td style="text-align: center;" class="hidden-print hidden-phone">
+                    @Html.ActionLink("View Details", "Details", "Users", new { id = item.UserId }, new { @Class = "btn btn-primary" })
+                </td>
+            </tr>
+        }
+
+    </table>
+
+    <ul class="pager">
+        <li style="display:@ViewData["prevDisabled"]; " class="hidden-print">
+            @Ajax.ActionLink("← Previous", "Index", "Users",
+                new
+                {
+                    searchText = @ViewData["SearchText"],
+                    page = @ViewData["Page"],
+                    pageSize = @ViewData["PageSize"],
+                    ptype = -1,
+                    creditStatus = @ViewData["CreditStat"]
+                }, new AjaxOptions
+                {
+                    HttpMethod = "GET",
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "table_id",
+                    LoadingElementId = "spinner"
+                })
+        </li>
+        <li>
+            <span>Page @ViewData["Page"] of @ViewData["totalPages"] </span>
+        </li>
+        <li style="display:@ViewData["nextDisabled"]; " class="hidden-print">
+            @Ajax.ActionLink("Next →", "Index", "Users",
+                new
+                {
+                    searchText = @ViewData["SearchText"],
+                    page = @ViewData["Page"],
+                    pageSize = @ViewData["PageSize"],
+                    ptype = 1,
+                    creditStatus = @ViewData["CreditStat"]
+                }, new AjaxOptions
+                {
+                    HttpMethod = "GET",
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "table_id",
+                    LoadingElementId = "spinner"
+                }, new { @style = "width: 106px;" })
+        </li>
+    </ul>
+
+</div>

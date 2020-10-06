@@ -1,0 +1,249 @@
+﻿<Window x:Class="AMStock.WPF.Views.Users"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        AllowDrop="True"
+        Title="Users" Height="600" Width="700" x:Name="WdwUser"
+        Background="Transparent" AllowsTransparency="False" WindowStyle="ThreeDBorderWindow"
+        DataContext="{Binding User, Source={StaticResource Locator}}" ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen" Closing="Users_OnClosing"
+        Icon="/AMStock.WPF;component/Resources/AppIcon.ico">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/MainSkin.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ControlsDictionary.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ListViewDictionary.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ListBoxDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid >
+        <Border Style="{StaticResource mainBorder}" TextBlock.FontFamily="Bookman Old Style" CornerRadius="0">
+            <Grid TextBlock.Foreground="White" TextBlock.FontSize="13">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="3"/>
+                    <RowDefinition Height="250"/>
+                    <RowDefinition Height="3"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <!--<StackPanel Grid.Row="0">
+                    <Button x:Name="btnClose" 
+                            Style="{StaticResource closeWindowButtons}"
+                            IsCancel="True"/>
+
+                    <TextBlock Text="User List" FontSize="18" Margin="5,-20,0,0"
+                           Style="{StaticResource windowTextBlockHeader}"  />
+
+                </StackPanel>-->
+
+                <StackPanel Grid.Row="1" HorizontalAlignment="Right" Visibility="Visible"
+                            Orientation="Horizontal"  
+                            Background="Transparent">
+                   <!-- <TextBlock Text="{Binding TotalNumberOfUsers}"  Margin="0,0,150,0"
+                               FontSize="14" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                    <Label  Content="Search:" Foreground="White" 
+                            Style="{StaticResource searchLabel}"/>
+
+                    <TextBox  InputLanguageManager.InputLanguage="en-US" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" 
+                             Style="{StaticResource searchTextBox}" Margin="10,0"/>
+                    <Button Content="Refresh List" Command="{Binding RefreshCommand}" Margin="10,0,10,0"/>-->
+                </StackPanel>
+
+                <ListView Grid.Row="2" x:Name="ListView"
+                                      ItemContainerStyle="{StaticResource GridViewItem}" 
+                                      SelectedItem="{Binding SelectedUser}"                          
+                                      ItemsSource="{Binding Users}">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="true" ColumnHeaderContainerStyle="{StaticResource GridViewHeader}">
+
+                            <GridViewColumn Header="User Name" DisplayMemberBinding="{Binding UserName}"  Width="auto"/>
+                            <GridViewColumn Header="Full Name" DisplayMemberBinding="{Binding FullName}" Width="auto"/>
+                            <GridViewColumn Header="Email" DisplayMemberBinding="{Binding Email}" Width="auto"/>
+                            <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}"  Width="auto"/>
+
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                
+                <GridSplitter Grid.Row="3" Height="3" HorizontalAlignment="Stretch" />
+
+                <Grid Grid.Row="4" Margin="5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" MinWidth="300"/>
+                            <ColumnDefinition Width="3"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.Column="0" Margin="5,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="Auto"/>
+                                
+                                <RowDefinition Height="*"/>
+
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" 
+									Text="Full Name:"/>
+                            <TextBox  InputLanguageManager.InputLanguage="en-US" Grid.Column="1" Grid.Row="0" 
+                                      x:Name="TxtFullName" FontWeight="Normal"
+									  ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtFullName}" 
+									  Text="{Binding SelectedUser.FullName, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+									  Validation.Error="Validation_Error" Margin="0,2,0,2" VerticalAlignment="Center"
+									  HorizontalAlignment="Stretch" />
+
+                            <TextBlock Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" 
+									Text="User Name: "/>
+                            <TextBox  InputLanguageManager.InputLanguage="en-US" Grid.Column="1" Grid.Row="1" 
+                                      x:Name="TxtUserDate" FontWeight="Normal"
+									ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtUserDate}" 
+									Text="{Binding SelectedUser.UserName, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+									Validation.Error="Validation_Error" Margin="0,2,0,2" VerticalAlignment="Center"
+									HorizontalAlignment="Stretch" />
+
+                            <TextBlock Grid.Column="0" Grid.Row="2" VerticalAlignment="Center"
+									Text="Email:"/>
+                            <TextBox  InputLanguageManager.InputLanguage="en-US" Grid.Column="1" Grid.Row="2" 
+                                      x:Name="TxtUserQty" FontWeight="Normal"
+									ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtUserQty}" 
+									Text="{Binding SelectedUser.Email, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+									Validation.Error="Validation_Error" Margin="0,2,0,2" VerticalAlignment="Center"/>
+
+
+                            <!--<TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Text="For Store:" 
+                                       Margin="0"/>
+                            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding Warehouses, Mode=OneWay}"  
+                                                          DisplayMemberPath="DisplayName"
+                                                          VerticalContentAlignment="Center"
+                                                          Background="Transparent" Height="25" Margin="0,2"
+                                                          SelectedItem="{Binding SelectedWarehouse}" />-->
+                            
+                            <CheckBox Grid.Row="4" Grid.Column="1" Content="Is Blocked" 
+                                      VerticalAlignment="Center" Margin="0" IsChecked="{Binding IsBlocked}"/>
+
+
+                            <Grid Grid.Row="5" Grid.ColumnSpan="2" Grid.Column="0">
+                                <Expander  Header="Create/Reset Password" Background="Transparent"
+                                           IsExpanded="{Binding NewPasswordExpandibility}" >
+
+                                    <StackPanel>
+                                        <TextBlock x:Name="TxtPasswordConfirmed"
+									               Text="{Binding SelectedUser.NewPassword,Mode=TwoWay}" 
+                                                   TextAlignment="Center" FontSize="16" FontWeight="Bold" Foreground="White"
+									               Margin="10,2" />
+
+                                        <Button Content="Get New Password" Height="30" Margin="10,2"
+                                                Command="{Binding GetNewPassword}" />
+                                    </StackPanel>
+
+                                </Expander>
+                            </Grid>
+
+                        </Grid>
+
+                        <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Stretch" />
+
+                        <Grid Grid.Column="2" Margin="5,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <!--<ColumnDefinition Width="auto"/>-->
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                                <!--<ColumnDefinition/>-->
+                            </Grid.ColumnDefinitions>
+                           
+                            <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"  VerticalAlignment="Top">
+                                <TextBlock Text="Given Previleges"  FontSize="16" FontWeight="Bold"  />
+                                <Separator Background="White"/>
+                            </StackPanel>
+                            
+                            <ListBox    Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,0" 
+									    x:Name="LstUserRoles" Foreground="Black"
+                                        Background="Transparent" MinHeight="100"
+									    BorderBrush="Transparent" IsTextSearchEnabled="True"
+                                        SelectedItem="{Binding SelectedRole}"
+									    ItemsSource="{Binding SelectedRoles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        ItemTemplate="{DynamicResource UserRoleBoxDataTemplate}">
+                            </ListBox>
+                            
+                            <ComboBox x:Name="CmbTypeOfRole" Grid.Column="0" Grid.Row="4" Margin="0,0,5,0" 
+                                      ItemsSource="{Binding FilteredRoles,Mode=OneWay}"
+                                      SelectedItem="{Binding SelectedRoleToAdd}" 
+                                      DisplayMemberPath="RoleDescription"
+                                      Background="Transparent"/>
+                            
+                            <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button Content="Add"   Width="50"
+                                     Command="{Binding AddRoleViewCommand}" IsEnabled="{Binding AddRoleEnability}"/>
+                            <Button Content="Remove"  Width="55"
+                                     Command="{Binding RemoveRoleViewCommand}" IsEnabled="{Binding RemoveRoleEnability}"/>
+                            </StackPanel>
+                            
+                            <CheckBox Grid.Column="0" Grid.Row="5" Background="Transparent" Grid.ColumnSpan="2"
+                                      IsChecked="{Binding AllRolesChecked}"
+                                      Content="Give All Roles"/>
+                        </Grid>
+
+                    </Grid>
+                </Grid>
+
+
+
+                <GridSplitter Grid.Row="5" Height="3" HorizontalAlignment="Stretch" />
+
+                <StackPanel Grid.Row="6" Orientation="Horizontal" VerticalAlignment="Top" Margin="0,5,0,0" HorizontalAlignment="Right">
+
+                    <Button Content="_Add New User" 
+                            Command="{Binding AddNewUserViewCommand}" 
+                            x:Name="BtnAddNew"  Style="{StaticResource bottomButtons}"
+                            Height="35" Padding="0,0" Margin="10,0,0,0" Click="BtnAddNew_Click"/>
+
+                    <Button Content="_Save" 
+                            Command="{Binding SaveUserViewCommand}" 
+                            x:Name="BtnSave"  Style="{StaticResource bottomButtons}"
+                            Height="35" Padding="10,0" Margin="10,0,0,0" IsDefault="True"/>
+
+                    <!--<Button Content="_Delete" Style="{StaticResource bottomButtons}"
+                            Command="{Binding DeleteUserViewCommand}" 
+                            IsEnabled="{Binding EditCommandVisibility}" 
+                            x:Name="BtnDelete"  
+                            Height="35" Padding="10,0" Margin="10,0,0,0" />-->
+
+                    <!--<Button Content="_Close" 
+                            IsCancel="True"  
+                            Padding="10,0" 
+                            Height="35" 
+                            Margin="10,0,0,0"/>-->
+
+                </StackPanel>
+
+            </Grid>
+
+        </Border>
+    </Grid>
+</Window>
+
+
+
+

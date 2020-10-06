@@ -1,0 +1,108 @@
+﻿@model IEnumerable<AMStock.Core.Models.BusinessPartnerDTO>
+<div id="table_id">
+    <div id="spinner">
+    </div>
+
+    <div>
+        <span>@ViewData["BusinessPartnerSearch"]</span>
+    </div>
+    @ViewData["totalNumber"] @ViewData["BussinessPartnerType"] (s) found
+
+    <table class="table table-striped table-condensed table-hover">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SerialNumber)
+            </th>
+            <th>@ViewData["BussinessPartnerType"] Name
+            </th>
+          @*  <th>
+                @Html.DisplayNameFor(model => model.Address.Telephone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address.Mobile)
+            </th>*@
+            <th>Outstanding Credit
+            </th>
+            <th>Credit Limit
+            </th>
+            <th style="text-align: center;" class="hidden-print hidden-phone"></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SerialNumber)
+                </td>
+                <td>
+                    @Html.ActionLink(@Html.DisplayFor(modelItem => item.DisplayName).ToString(), "Details", "BusinessPartner", new { id = item.Id, type = @ViewData["BPType"] }, null)
+                    
+                </td>
+
+           @*     <td>
+                    @Html.DisplayFor(modelItem => item.Address.Telephone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address.Mobile)
+                </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalCredits)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreditLimit)
+                </td>
+                <td style="text-align: center;" class="hidden-print hidden-phone">
+
+                    @Html.ActionLink("View Details", "Details", "BusinessPartner", new { id = item.Id, type = @ViewData["BPType"] }, new { @Class = "btn btn-primary" })
+
+                </td>
+            </tr>
+        }
+
+    </table>
+
+    <ul class="pager">
+        <li style="display:@ViewData["prevDisabled"]; " class="hidden-print">
+            @Ajax.ActionLink("← Previous", "Index", "BusinessPartner",
+                new
+                {
+                    type = @ViewData["BPType"],
+                    warehouseId = @ViewData["WarehouseId"],
+                    searchText = @ViewData["SearchText"],
+                    page = @ViewData["Page"],
+                    pageSize = @ViewData["PageSize"],
+                    ptype = -1,
+                    creditStatus = @ViewData["CreditStat"]
+                }, new AjaxOptions
+                {
+                    HttpMethod = "GET",
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "table_id",
+                    LoadingElementId = "spinner"
+                })
+        </li>
+        <li>
+            <span>Page @ViewData["Page"] of @ViewData["totalPages"] </span>
+        </li>
+        <li style="display:@ViewData["nextDisabled"]; " class="hidden-print">
+            @Ajax.ActionLink("Next →", "Index", "BusinessPartner",
+                new
+                {
+                    type = @ViewData["BPType"],
+                    warehouseId = @ViewData["WarehouseId"],
+                    searchText = @ViewData["SearchText"],
+                    page = @ViewData["Page"],
+                    pageSize = @ViewData["PageSize"],
+                    ptype = 1,
+                    creditStatus = @ViewData["CreditStat"]
+                }, new AjaxOptions
+                {
+                    HttpMethod = "GET",
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "table_id",
+                    LoadingElementId = "spinner"
+                }, new { @style = "width: 106px;" })
+        </li>
+    </ul>
+
+</div>

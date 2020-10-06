@@ -1,0 +1,135 @@
+﻿<Window x:Class="AMStock.WPF.Views.Categories"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+        AllowDrop="True"
+        Title="{Binding HeaderText}" WindowStartupLocation="CenterScreen" WindowStyle="ThreeDBorderWindow"
+        Background="Transparent" AllowsTransparency="False" x:Name="WdwCategories"
+        DataContext="{Binding Categories, Source={StaticResource Locator}}"
+        Height="420" Width="320" Icon="/AMStock.WPF;component/Resources/AppIcon.ico" 
+        ResizeMode="NoResize" Loaded="WdwCategories_Loaded" Closing="Categories_OnClosing">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/MainSkin.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ListviewDictionary.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ControlsDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Border Style="{StaticResource mainBorder}" CornerRadius="0" >
+            <Grid>
+                
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="3"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+
+                <!--<StackPanel Grid.Row="0">
+                    <telerik:RadButton x:Name="btnClose" 
+                            Style="{StaticResource closeWindowButtons}"
+                            IsCancel="True"/>
+
+                    <TextBlock Text="{Binding HeaderText}" FontSize="18" Margin="5,-20,0,0"
+                           Style="{StaticResource windowTextBlockHeader}"  />
+                </StackPanel>-->              
+
+                <Grid Grid.Row="1" Margin="5" 
+                      TextBlock.Foreground="White" 
+                      TextBlock.FontSize="13" >
+
+                <!--<Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>-->
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="3"/>
+                    <RowDefinition Height="35"/>
+                </Grid.RowDefinitions>
+
+                <ListView    x:Name="LstCategories" Grid.Row="0" Grid.Column="0" 
+                                ItemContainerStyle="{StaticResource GridViewItem}" 
+                                SelectedItem="{Binding SelectedCategory}"                            
+                                ItemsSource="{Binding Categories}">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="true" ColumnHeaderContainerStyle="{StaticResource GridViewHeader}">
+                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding DisplayName}" Width="200"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                        
+                <!--<GridSplitter Grid.Row="1" Grid.ColumnSpan="2" Height="3" 
+                              HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />-->
+
+                <!--<TextBlock Grid.Row="2" Grid.Column="0" Text="Name:  " VerticalAlignment="Center"/>-->
+                <TextBox x:Name="TxtCategoryName" Grid.Row="2" Margin="0,5,0,5" 
+                            ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtCategoryName}" 
+                         InputLanguageManager.InputLanguage="{Binding InputLanguage}" FontFamily="Bookman old style"
+                            Text="{Binding  SelectedCategory.DisplayName, Mode=TwoWay, 
+                                            UpdateSourceTrigger=PropertyChanged, 
+                                            ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                            Validation.Error="Validation_Error"  />
+                        
+            </Grid>               
+
+                <GridSplitter Grid.Row="2" 
+                              Height="3" 
+                              HorizontalAlignment="Stretch" />
+
+                <StackPanel Grid.Row="3" Orientation="Horizontal" 
+                            VerticalAlignment="Top" Margin="0,5,0,5" 
+                            HorizontalAlignment="Right">
+
+                    <telerik:RadButton Content="_Add New" 
+                            Command="{Binding AddNewCategoryCommand}"
+                            x:Name="BtnAdd" Click="BtnAdd_OnClick"
+                            CommandParameter="{Binding ElementName=WdwCategories}" 
+                            Height="30" 
+                            Padding="10,0" 
+                            Margin="5,0,0,0" Width="75"
+                            />
+                    <telerik:RadButton Content="_Save" 
+                            Command="{Binding SaveItemViewCommand}" 
+                            x:Name="BtnSaveClose" 
+                            Height="30" 
+                            Padding="10,0" 
+                            Margin="5,0,0,0" Width="60"/>
+                    <telerik:RadButton Content="_Choose" 
+                            Command="{Binding SaveItemViewCommand}" 
+                            x:Name="BtnChoose" 
+                            CommandParameter="{Binding ElementName=WdwCategories}" 
+                            Height="30" 
+                            Padding="10,0" 
+                            Margin="5,0,0,0" 
+                            IsDefault="True" Width="70"/>
+                    <telerik:RadButton Content="_Delete" 
+                            Command="{Binding DeleteCategoryViewCommand}" 
+                            x:Name="BtnRemove" 
+                            CommandParameter="{Binding ElementName=WdwCategories}" 
+                            Height="30" 
+                            Padding="10,0" 
+                            Margin="5,0,0,0" Width="60"
+                            />
+                    <!--<telerik:RadButton Content="_Close" 
+                            Command="{Binding CloseItemViewCommand}" 
+                            x:Name="BtnSelectandClose" 
+                            CommandParameter="{Binding ElementName=WdwCategories}" 
+                            Height="30" 
+                            Padding="10,0" 
+                            Margin="5,0,0,0" 
+                            />-->
+                </StackPanel>
+                
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
+
+

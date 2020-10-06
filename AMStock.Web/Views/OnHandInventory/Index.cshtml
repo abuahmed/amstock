@@ -1,0 +1,184 @@
+﻿@model IEnumerable<AMStock.Core.Models.ItemQuantityDTO>
+@*@{
+    if (!Request.IsAuthenticated)
+    {
+        Response.Redirect("/Account/Login?returnUrl="
+           + Request.Url.LocalPath);
+    }    
+    
+}  *@
+<script>
+    $(document).ajaxStart(function () {
+        //alert("Ajax started");
+        $("#spinner").show();//.addClass('displayb');//
+    });
+    $(document).ajaxStop(function () {
+        //alert("Ajax stoped");
+        $("#spinner").hide();//.addClass('nodisplay');//
+    });
+</script>
+
+@{
+    ViewBag.Title = "OnHand Inventory";
+}
+<div style="text-align: center;">
+    <h4 style="font-size: 24px; font-weight: bold; color: orange; font-family: 'Bookman Old Style';"><i><b>SMART Trading PLC</b></i></h4>
+</div>
+<div class="clear-fix"></div>
+<div class="pull-left">
+    <h3>Current Inventory</h3>
+</div>
+
+<div class="pull-right hidden-print" style="margin-top: 20px;">
+    <i class="glyphicon glyphicon-search"></i>
+    <input class="input-sm" id="searchText" name="searchText" onkeydown="itemSearch(this)" placeholder="Search Item" style="width: 250px;" title="(by Item Code or Name)" type="text">
+</div>
+
+<div class="clear-fix"></div>
+
+<div class="form-inline">
+
+    <div class="form-group">
+        @Html.Label("Store")
+        @(Html.Kendo().DropDownList()
+              .Name("warehouseId")
+              .HtmlAttributes(new { style = "width: 250px" })
+              .DataTextField("Name")
+              .DataValueField("Id")
+              .AutoBind(true)
+              .Events(e => e.Change("wcqChange"))
+              .DataSource(source => source
+                  .Read(read => read.Action("GetWarehouses", "List"))
+                  .ServerFiltering(false))
+              )
+    </div>
+    <div class="form-group">
+        @Html.Label("Category")
+        @(Html.Kendo().DropDownList()
+              .Name("categoryId")
+              .HtmlAttributes(new { style = "width: 250px" })
+              .DataTextField("DisplayName")
+              .DataValueField("Id")
+              .AutoBind(true)
+              .Events(e => e.Change("wcqChange"))
+              .DataSource(source => source
+                  .Read(read => read.Action("GetCategories", "List", new { catType = "0" }))
+                  .ServerFiltering(false))
+              )
+    </div>
+    <div class="form-group">
+        @Html.Label("Filter By Quantity")
+        @(Html.Kendo().DropDownList()
+              .Name("filterByQuantityId")
+              .HtmlAttributes(new { style = "width: 250px" })
+              .Events(e => e.Change("wcqChange"))
+              .BindTo((IEnumerable<SelectListItem>)ViewData["QuantityFilter"])
+              )
+    </div>
+
+</div>
+
+@*<div class="pull-left">
+    <div id='loadingDiv'>Please wait...  <img src="~/Images/loading-image.gif" /> </div>
+</div>*@
+
+@{Html.RenderPartial("~/Views/Shared/_onHandInventory.cshtml");}
+
+@*<p>
+    on this page show bar/pie chart of all items on the list for comparison
+</p>*@
+
+
+
+<script type="text/javascript">
+
+    $('#ohimenu').addClass('active');
+
+    $(".alert").alert();
+    $(document).ready(function () {
+        //$('#loadingDiv').hide();
+    });
+
+    function itemSearch(ele) {
+        if (event.keyCode == 13) {
+            var searchText = ele.value;
+            $.ajax({
+                type: "GET",
+                url: "/OnHandInventory/Index",
+                data: { 'searchText': searchText },
+                contentType: false,
+                async: true,
+                success: function (inventoryList) {
+                    $("#table_id").replaceWith(inventoryList);
+                },
+                error: function () {
+                    alert("Sorry, there was a problem!");
+                }
+            });
+        }
+
+    }
+
+    function wcqChange() {
+        var warehouseId = $("#warehouseId").data("kendoDropDownList").value();
+        var categoryId = $("#categoryId").data("kendoDropDownList").value();
+        var filterByQuantity = $("#filterByQuantityId").data("kendoDropDownList").value();
+
+        $.ajax({
+            type: "GET",
+            url: "/OnHandInventory/Index",
+            data: { 'warehouseId': warehouseId, 'categoryId': categoryId, 'filterByQuantity': filterByQuantity },
+            contentType: false,
+            async: true,
+            success: function (inventoryList) {
+                $("#table_id").replaceWith(inventoryList);
+            },
+            error: function () {
+                alert("Sorry, there was a problem!");
+            }
+        });
+    }
+
+    //function categoryChange() {
+    //    var warehouseId = $("#warehouseId").data("kendoDropDownList").value();
+    //    var categoryId = $("#categoryId").data("kendoDropDownList").value();
+    //    var filterByQuantity = $("#filterByQuantityId").data("kendoDropDownList").value();
+
+    //    $("#spinner").addClass("showspinner");//.fadeOut("slow");
+    //    $.ajax({
+    //        type: "GET",
+    //        url: "/OnHandInventory/Index",
+    //        data: { 'warehouseId': warehouseId, 'categoryId': categoryId, 'filterByQuantity': filterByQuantity },
+    //        contentType: false,
+    //        async: true,
+    //        success: function (inventoryList) {
+    //            $("#table_id").replaceWith(inventoryList);
+    //        },
+    //        error: function () {
+    //            alert("Sorry, there was a problem!");
+    //        }
+    //    });
+    //}
+
+    //function quantityChange() {
+    //    var warehouseId = $("#warehouseId").data("kendoDropDownList").value();
+    //    var categoryId = $("#categoryId").data("kendoDropDownList").value();
+    //    var filterByQuantity = $("#filterByQuantityId").data("kendoDropDownList").value();
+
+    //    $.ajax({
+    //        type: "GET",
+    //        url: "/OnHandInventory/Index",
+    //        data: { 'warehouseId': warehouseId, 'filterByQuantity': filterByQuantity, 'categoryId': categoryId },
+    //        contentType: false,
+    //        async: true,
+    //        success: function (inventoryList) {
+    //            $("#table_id").replaceWith(inventoryList);
+    //        },
+    //        error: function () {
+    //            alert("Sorry, there was a problem!");
+    //        }
+    //    });
+
+    //}
+
+</script>

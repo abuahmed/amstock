@@ -1,0 +1,196 @@
+﻿<Window x:Class="AMStock.WPF.Views.Organizations"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        mc:Ignorable="d" WindowStyle="ThreeDBorderWindow" x:Name="WdwOrganizations"
+        Title="Organizations" Height="600" Width="700" 
+        WindowStartupLocation="CenterScreen" Margin="0,20,0,0" 
+        DataContext="{Binding Organization, Source={StaticResource Locator}}"
+        Background="Transparent" AllowsTransparency="False" Closing="Organizations_OnClosing"
+        Icon="/AMStock.WPF;component/Resources/AppIcon.ico">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/MainSkin.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ControlsDictionary.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ListViewDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
+    </Window.Resources>
+
+    <Grid x:Name="LayoutRoot" TextBlock.FontFamily="Bookman old style"
+          TextBlock.Foreground="White">
+        <Border Style="{StaticResource mainBorder}" CornerRadius="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="1" Margin="5,0"
+                            Orientation="Horizontal" HorizontalAlignment="Right" 
+                            Background="Transparent">
+                </StackPanel>
+
+                <Grid Grid.Row="2">
+                    <Grid Margin="2,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="2"/>
+                            <RowDefinition Height="40"/>
+                        </Grid.RowDefinitions>
+
+                        <ListView x:Name="ListView" Grid.Row="1"
+                                  ItemContainerStyle="{StaticResource GridViewItem}" 
+                                  SelectedItem="{Binding SelectedOrganization}"                            
+                                  ItemsSource="{Binding Organizations}">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="true" ColumnHeaderContainerStyle="{StaticResource GridViewHeader}">
+                                    <GridViewColumn Header="Organization Name" DisplayMemberBinding="{Binding DisplayName}"  Width="auto"/>
+                                    <GridViewColumn Header="Tin No." DisplayMemberBinding="{Binding TinNumber}"  Width="auto"/>
+                                    
+                                    <GridViewColumn Header="Address" DisplayMemberBinding="{Binding Address.StreetAddress}" Width="150" />
+                                    <GridViewColumn Header="Tel." DisplayMemberBinding="{Binding Address.Telephone}" Width="Auto" />
+                                    <GridViewColumn Header="Mobile" DisplayMemberBinding="{Binding Address.Mobile}" Width="Auto" />
+                                    <GridViewColumn Header="No. Of Stores" DisplayMemberBinding="{Binding NoOfWarehouses}" Width="Auto" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                        <Expander Grid.Row="2" Header="Detail" IsExpanded="True" TextBlock.Foreground="White" >
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="5"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid Grid.Column="0" Margin="5" >
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" VerticalAlignment="Center"/>
+                                    <TextBox x:Name="TxtOrganizationName" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"
+                                             Text="{Binding SelectedOrganization.DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True,NotifyOnValidationError=True}"
+                                             ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtOrganizationName}" 
+                                             Validation.Error="Validation_Error" 
+                                             Margin="0,3" />
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Tin Number:" VerticalAlignment="Center"/>
+                                    <TextBox x:Name="TinNumBox" Grid.Row="1" Grid.Column="1" Margin="0,3" 
+                                             ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TinNumBox}" 
+                                             Text="{Binding SelectedOrganization.TinNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                             Validation.Error="Validation_Error"  />
+
+                                    <!--<TextBlock Grid.Row="1" Grid.Column="2" Text=" VAT Number:" VerticalAlignment="Center"/>
+                                    <TextBox x:Name="VatNumBox" Grid.Row="1" Grid.Column="3" Margin="0,3" 
+                                             ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=VatNumBox}" 
+                                             Text="{Binding SelectedOrganization.VatNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True,NotifyOnValidationError=True}" 
+                                             Validation.Error="Validation_Error"  />-->
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="More Description:"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3"
+                                             Text="{Binding SelectedOrganization.Description}" TextWrapping="Wrap" Margin="0,3" />
+
+                                </Grid>
+
+                                <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+
+                                <Grid Grid.Column="2">
+                                    <Expander Header="Address" HorizontalAlignment="Stretch" IsExpanded="True" TextBlock.Foreground="White" >
+                                        <Grid Margin="5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                                <RowDefinition Height="30"/>
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="City:" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="0" x:Name="TxtCity" Grid.Column="1" 
+                                                     ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtCity}" 
+                                                     Text="{Binding SelectedOrganization.Address.City, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error" Margin="0,3" />
+
+                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Address:" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="1" x:Name="TxtStreetAddress"  Grid.Column="1" ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtStreetAddress}" 
+                                                     Text="{Binding SelectedOrganization.Address.StreetAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error" Grid.RowSpan="2" Margin="0,3" TextWrapping="Wrap" />
+
+                                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Telephone:" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="3" x:Name="TxtTelephone" Grid.Column="1" ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtTelephone}" 
+                                                     Text="{Binding SelectedOrganization.Address.Telephone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error"  Margin="0,3" />
+
+                                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Mobile:" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="4"  x:Name="TxtMobile"  Grid.Column="1" ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtMobile}" 
+                                                     Text="{Binding SelectedOrganization.Address.Mobile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error" Margin="0,3" />
+
+                                            <TextBlock Grid.Row="5" Grid.Column="0" Text="Email:" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Row="5"  x:Name="TxtEmail"  Grid.Column="1" ToolTip="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TxtEmail}" 
+                                                     Text="{Binding SelectedOrganization.Address.PrimaryEmail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" 
+                                                     Validation.Error="Validation_Error" Margin="0,3" />
+
+                                        </Grid>
+                                    </Expander>
+                                </Grid>
+                            </Grid>
+                        </Expander>
+
+                        <GridSplitter Grid.Row="5" HorizontalAlignment="Stretch" />
+                        <StackPanel Orientation="Horizontal" Grid.Row="6" Background="Transparent" HorizontalAlignment="Right">
+
+                            <Button Content="_Add New" Tag="Add New" x:Name="BtnAddNew"
+                                    Command="{Binding AddNewOrganizationViewCommand}" 
+                                    CommandParameter="{Binding ElementName=BtnAddNew}"                                     
+                                    Style="{StaticResource bottomButtons}" Click="BtnAddNew_Click"/>
+
+                            <Button Content="_Save" Tag="Save" x:Name="BtnSave"
+                                    Command="{Binding SaveOrganizationViewCommand}" IsDefault="True" 
+                                    CommandParameter="{Binding ElementName=WdwOrganizations}"  
+                                    Style="{StaticResource bottomButtons}" />
+
+                            <Button Content="_Delete" Tag="Delete" x:Name="BtnDelete"
+                                    Command="{Binding DeleteOrganizationViewCommand}" 
+                                    CommandParameter="{Binding ElementName=BtnDelete}"                                     
+                                    Style="{StaticResource bottomButtons}"/>
+                        </StackPanel>
+
+                    </Grid>
+                </Grid>
+
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
+

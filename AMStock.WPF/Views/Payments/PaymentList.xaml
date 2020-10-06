@@ -1,0 +1,357 @@
+﻿<Window x:Class="AMStock.WPF.Views.PaymentList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" AllowDrop="True"
+        Title="{Binding HeaderText}" Height="650" Width="860" x:Name="WdwPaymentList"
+        xmlns:local="clr-namespace:AMStock.Core.Extensions;assembly=AMStock.Core"
+        xmlns:model="clr-namespace:AMStock.Core.Enumerations;assembly=AMStock.Core"
+        xmlns:vm="clr-namespace:AMStock.WPF.ViewModel"          
+        Background="Transparent" AllowsTransparency="False" WindowStyle="ThreeDBorderWindow"
+        DataContext="{Binding PaymentList, Source={StaticResource Locator}}" Closing="PaymentList_OnClosing"
+        WindowStartupLocation="CenterScreen" Icon="/AMStock.WPF;component/Resources/AppIcon.ico">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/MainSkin.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ControlsDictionary.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ListViewDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Border Style="{StaticResource mainBorder}"  CornerRadius="0" >
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <!--<Menu BorderThickness="1" BorderBrush="White" FontSize="13" FontFamily="bookman old style">
+                    <MenuItem Header="File"/>
+                    <MenuItem Header="Edit">
+                        <MenuItem Header="Copy"/>
+                        <MenuItem Header="Cut"/>
+                        <MenuItem Header="Paste"/>
+                    </MenuItem>
+                    <MenuItem Header="View"/>
+                    <MenuItem Header="Help"/>
+                </Menu>-->
+
+                <Grid TextBlock.Foreground="White" TextBlock.FontSize="13" Grid.Row="1" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="3"/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+
+                    <!--<StackPanel Grid.Row="0">
+                    <Button x:Name="btnClose" 
+                            Style="{StaticResource closeWindowButtons}"
+                            IsCancel="True"/>
+
+                    <TextBlock Text="{Binding HeaderText}" Margin="5,-20,0,0"
+                           Style="{StaticResource windowTextBlockHeader}"  />
+                    <Separator Background="White" Margin="5,0"/>
+                </StackPanel>-->
+
+                    <Expander Grid.Row="1" Margin="5,0" Foreground="Black" Header="Filter List" IsExpanded="True">
+                        <Grid Margin="5,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock  Grid.Row="0" Grid.Column="0" Text="Store:"
+                                     Style="{StaticResource textBlockStyle1}"/>
+                            <ComboBox   Grid.Row="0" Grid.Column="1" 
+                                    Text="For Store:"
+                                    x:Name="CmbCurrentWarehouse" 
+                                    ItemsSource="{Binding Warehouses, Mode= OneWay}"
+                                    SelectedItem="{Binding SelectedWarehouse}"                                       
+                                    DisplayMemberPath="DisplayName"
+                                    Style="{StaticResource comboBoxStyle1}"/>
+
+                            <TextBlock Text="From:" Grid.Row="0" Grid.Column="2"  VerticalAlignment="Center" 
+                               Style="{StaticResource textBlockStyle1}"/>
+                            <DatePicker  Grid.Row="0" Grid.Column="3"
+                                            x:Name="DtFromDate" 
+                                            SelectedDate="{Binding FilterStartDate}" 
+                                            Margin="5"  
+                                            VerticalAlignment="Center"/>
+
+                            <TextBlock Text="To:" Grid.Column="4" Grid.Row="0" 
+                                   Style="{StaticResource textBlockStyle1}"/>
+                            <DatePicker Grid.Row="0" Grid.Column="5" 
+                                            x:Name="DtToDate" 
+                                            SelectedDate="{Binding FilterEndDate}" 
+                                            Margin="5"   
+                                            VerticalAlignment="Center"/>
+
+                            <Grid Grid.Row="0" Grid.Column="7" >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Button  Content="Refresh" Grid.Column="0" IsDefault="True"
+                                     Command="{Binding RefreshCommand}" Margin="3,2" />
+                                <Button  Content="Export" Grid.Column="1"
+                                     Command="{Binding ExportToExcelCommand}" Margin="3,2" />
+                            </Grid>
+
+                            <TextBlock  Text="Status: " Grid.Row="1" Grid.Column="0" 
+                                Style="{StaticResource textBlockStyle1}"/>
+                            <!--<ComboBox    Grid.Column="1" Grid.Row="1" 
+                                        x:Name="CmbPaymentStatus" 
+									    SelectedValue="{Binding SelectedPaymentStatus, Mode=TwoWay}" 
+									    ItemsSource="{Binding Mode=OneWay, Source={local:Enumeration {x:Type Model:PaymentListTypes}}}" 
+									    Validation.ErrorTemplate="{x:Null}"  
+									    DisplayMemberPath="Description" SelectedIndex="2"
+									    SelectedValuePath="Value"
+                                        Style="{StaticResource comboBoxStyle1}" />-->
+                            <ComboBox   Grid.Column="1" Grid.Row="1"  Margin="5" 
+                                        x:Name="CmbPaymentStatus"                                           
+                                        ItemsSource="{Binding PaymentStatusList, Mode= OneWay}"
+                                        SelectedItem="{Binding SelectedPaymentStatusList}"
+                                        DisplayMemberPath="Display"
+                                        Style="{StaticResource comboBoxStyle1}"/>
+
+
+                            <TextBlock  Grid.Row="1" Grid.Column="2"
+                                            Text="Method"  Style="{StaticResource textBlockStyle1}"/>
+                            <ComboBox   Grid.Column="3" Grid.Row="1"  Margin="5" 
+                                        x:Name="CmbFilterPaymentStatus"                                           
+                                        ItemsSource="{Binding PaymentMethodList, Mode= OneWay}"
+                                        SelectedItem="{Binding SelectedPaymentMethodList}"
+                                        DisplayMemberPath="Display" 
+                                        Style="{StaticResource comboBoxStyle1}"/>
+
+                            <TextBlock  Grid.Row="1" Grid.Column="4"
+                                            Text="{Binding BusinessPartner}"  Style="{StaticResource textBlockStyle1}"/>
+                            <ComboBox x:Name="CmbBusinessPartners" Grid.Row="1" Grid.Column="5"  Margin="5"
+                                          ItemsSource="{Binding BusinessPartners,Mode=OneWay}" 
+                                          DisplayMemberPath="DisplayName" 
+                                          SelectedItem="{Binding SelectedBusinessPartnerFilter}" 
+                                          Style="{StaticResource comboBoxStyle1}"/>
+
+                            <Button Margin="5" Grid.Column="7" Grid.Row="1"
+                                x:Name="BtnAddPayment" 
+                                Content="{Binding PaymentActionContent}"
+                                Visibility="{Binding PaymentActionVisibility}"
+                                Command="{Binding AddNewPaymentCommand}"/>
+                        </Grid>
+                    </Expander>
+                    <ListView Grid.Row="2" x:Name="PaymentListView"
+                                      ItemContainerStyle="{StaticResource GridViewItem}"                                                                 
+                                      SelectedItem="{Binding SelectedPayment}"                            
+                                      ItemsSource="{Binding Payments}">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="true" ColumnHeaderContainerStyle="{StaticResource GridViewHeader}">
+                                <GridViewColumn Header="Store" DisplayMemberBinding="{Binding Transaction.Warehouse.DisplayName}" Width="70"/>
+                                <GridViewColumn Header="Payment Date" DisplayMemberBinding="{Binding PaymentDateString}" Width="auto"/>
+                                <GridViewColumn Header="Method" DisplayMemberBinding="{Binding PaymentMethod}"  Width="auto"/>
+                                <GridViewColumn Header="Number" DisplayMemberBinding="{Binding Transaction.TransactionNumber}" Width="auto"/>
+                                <GridViewColumn Header="{Binding BusinessPartner}" DisplayMemberBinding="{Binding Transaction.BusinessPartner.DisplayNameShort}" Width="auto"/>
+                                <GridViewColumn Header="No. Of Items" DisplayMemberBinding="{Binding Transaction.CountLines}" Width="auto"/>
+                                <GridViewColumn Header="Total Cost" DisplayMemberBinding="{Binding Transaction.TotalCost}"  Width="auto"/>
+                                <GridViewColumn Header="Payment Amount" DisplayMemberBinding="{Binding Amount}" Width="auto"/>
+                                <!--<GridViewColumn Header="Due Date" DisplayMemberBinding="{Binding DueDate}" Width="auto"/>-->
+                                <GridViewColumn Header="Status" DisplayMemberBinding="{Binding StatusString}" Width="auto"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <!--<ListView Grid.Row="2" x:Name="PaymentListView"
+                                      ItemContainerStyle="{StaticResource GridViewItem}"                                                                 
+                                      SelectedItem="{Binding SelectedTransactionLine}"                            
+                                      ItemsSource="{Binding TransactionLines}">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="true" ColumnHeaderContainerStyle="{StaticResource GridViewHeader}">
+                            <GridViewColumn Header="Payment Date" DisplayMemberBinding="{Binding TransactionDateString}" Width="auto"/>
+                            <GridViewColumn Header="Method" DisplayMemberBinding="{Binding PaymentMethod}"  Width="auto"/>
+                            <GridViewColumn Header="Number" DisplayMemberBinding="{Binding TransactionNumber}" Width="auto"/>
+                            <GridViewColumn Header="{Binding BusinessPartner}" DisplayMemberBinding="{Binding DisplayName}" Width="auto"/>
+                            <GridViewColumn Header="No. Of Items" DisplayMemberBinding="{Binding CountLines}" Width="auto"/>
+                            <GridViewColumn Header="Total Cost" DisplayMemberBinding="{Binding TotalCost}"  Width="auto"/>
+                            <GridViewColumn Header="Amount" DisplayMemberBinding="{Binding PaymentAmount}" Width="auto"/>
+                            <GridViewColumn Header="Due Date" DisplayMemberBinding="{Binding DueDateString}" Width="auto"/>
+                            <GridViewColumn Header="Status" DisplayMemberBinding="{Binding TransactionStatus}" Width="auto"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>-->
+
+                    <Expander Grid.Row="3" Header="Deposit/Clearance Detail" Visibility="{Binding ClearanceExpanderVisibility}"
+                          TextBlock.FontFamily="Bookman old style"
+                          TextBlock.Foreground="Black">
+                        <Grid Margin="5,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock  Grid.Row="0" Grid.Column="0" Text="Statement No.:"
+                                     Style="{StaticResource textBlockStyle1}"/>
+                            <TextBox  Grid.Row="0" Grid.Column="1" Text="{Binding SelectedPaymentClearance.StatementNumber}" 
+                                  VerticalContentAlignment="Center" IsEnabled="False"
+                                  Margin="5"/>
+
+                            <TextBlock Text="Statement Date:" Grid.Column="2" Grid.Row="0"
+                               Style="{StaticResource textBlockStyle1}"/>
+                            <TextBox  Grid.Row="0" Grid.Column="3" Text="{Binding SelectedPaymentClearance.StatementDate}" 
+                                  VerticalContentAlignment="Center" IsEnabled="False" 
+                                  Margin="5"/>
+
+                            <TextBlock Text="Deposited By:" Grid.Column="4" Grid.Row="0" 
+                                   Style="{StaticResource textBlockStyle1}"/>
+                            <TextBox  Grid.Row="0" Grid.Column="5" Text="{Binding SelectedPaymentClearance.DepositedUserString}" 
+                                  VerticalContentAlignment="Center"  IsEnabled="False"
+                                  Margin="5"/>
+
+                            <TextBlock Text="Cleared By:" Grid.Column="6" Grid.Row="0" 
+                                   Style="{StaticResource textBlockStyle1}"/>
+                            <TextBox  Grid.Row="0" Grid.Column="7" Text="{Binding SelectedPaymentClearance.ClearedUserString}" 
+                                  VerticalContentAlignment="Center" IsEnabled="False" 
+                                  Margin="5"/>
+
+                            <Button Grid.Row="0" Grid.Column="8" Content=" Delete Clearance " Margin="5,2"
+                            Command="{Binding DeleteClearanceCommand}" />
+
+                        </Grid>
+                    </Expander>
+                    <Expander Grid.Row="4" Header="Check Detail" Visibility="{Binding CheckExpanderVisibility}"
+                          TextBlock.FontFamily="Bookman old style"
+                          TextBlock.Foreground="White">
+                        <Grid Margin="5,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                                <!--<ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>-->
+                            </Grid.ColumnDefinitions>
+                            <TextBlock  Grid.Row="0" Grid.Column="0" Text="Check No.:"
+                                     Style="{StaticResource textBlockStyle1}"/>
+                            <TextBox  Grid.Row="0" Grid.Column="1" Text="{Binding SelectedCheck.CheckNumber}" 
+                                  VerticalContentAlignment="Center" IsEnabled="False" 
+                                  Margin="5"/>
+
+                            <TextBlock Text="Check Date:" Grid.Column="2" Grid.Row="0"
+                               Style="{StaticResource textBlockStyle1}"/>
+                            <TextBox  Grid.Row="0" Grid.Column="3" Text="{Binding SelectedCheck.CheckDate}" 
+                                  VerticalContentAlignment="Center" IsEnabled="False" 
+                                  Margin="5"/>
+
+                            <!--<TextBlock Text="Bank:" Grid.Column="4" Grid.Row="0" 
+                                   Style="{StaticResource textBlockStyle1}"/>
+                        <TextBox  Grid.Row="0" Grid.Column="5" Text="{Binding SelectedCheck.BusinessPartnerBankAccount.BankName}" 
+                                  VerticalContentAlignment="Center" IsEnabled="False" 
+                                  Margin="5"/>-->
+
+                            <TextBlock Text="Account No.:" Grid.Column="4" Grid.Row="0" 
+                                   Style="{StaticResource textBlockStyle1}"/>
+                            <TextBox  Grid.Row="0" Grid.Column="5" Text="{Binding SelectedCheck.BusinessPartnerBankAccount.AccountDetail}" 
+                                  VerticalContentAlignment="Center" IsEnabled="False" 
+                                  Margin="5"/>
+
+                            <Button Grid.Row="0" Grid.Column="6" Content=" Convert Check " Margin="5,2"
+                            Command="{Binding ConvertCheckToCreditCommand}" />
+                        </Grid>
+                    </Expander>
+
+                    <Expander Grid.Row="5" Header="Items List" 
+                          TextBlock.FontFamily="Bookman old style"
+                          TextBlock.Foreground="White">
+                        <ListView  x:Name="LstTransactionLines" Margin="5"
+                               MinHeight="0" HorizontalAlignment="Left" 
+                               ItemContainerStyle="{StaticResource GridViewItem}"
+                               ItemsSource="{Binding TransactionLines, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="true" ColumnHeaderContainerStyle="{StaticResource GridViewHeader}">
+                                    <GridViewColumn Header="Item Code" DisplayMemberBinding="{Binding Item.ItemCode}" Width="auto"/>
+                                    <GridViewColumn Header="Item Name" DisplayMemberBinding="{Binding Item.DisplayName}"  Width="auto"/>
+                                    <GridViewColumn Header="Qty." DisplayMemberBinding="{Binding Unit}" Width="auto"/>
+                                    <GridViewColumn Header="Each Price" DisplayMemberBinding="{Binding EachPrice}" Width="auto"/>
+                                    <GridViewColumn Header="Total" DisplayMemberBinding="{Binding LinePrice}" Width="auto"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <!--<ListView  x:Name="LstTransactionLines" Margin="5"
+                               MinHeight="0" HorizontalAlignment="Left" 
+                               ItemContainerStyle="{StaticResource GridViewItem}"
+                               ItemsSource="{Binding TransactionLineDetails, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="true" ColumnHeaderContainerStyle="{StaticResource GridViewHeader}">
+                                <GridViewColumn Header="Item Code" DisplayMemberBinding="{Binding ItemCode}" Width="auto"/>
+                                <GridViewColumn Header="Item Name" DisplayMemberBinding="{Binding ItemDisplayName}"  Width="auto"/>
+                                <GridViewColumn Header="Qty." DisplayMemberBinding="{Binding Unit}" Width="auto"/>
+                                <GridViewColumn Header="Each Price" DisplayMemberBinding="{Binding EachPrice}" Width="auto"/>
+                                <GridViewColumn Header="Total" DisplayMemberBinding="{Binding LinePrice}" Width="auto"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>-->
+                    </Expander>
+
+                    <GridSplitter Grid.Row="6" Height="3" HorizontalAlignment="Stretch" />
+
+                    <Grid Grid.Row="7">
+                        <StackPanel Grid.Column="0" Margin="10,10"  Orientation="Horizontal" 
+                                HorizontalAlignment="Right" 
+                                VerticalAlignment="Center"
+                                TextBlock.Foreground="Black" 
+                                TextBlock.FontFamily="Bookman Old Style" 
+                                TextBlock.FontSize="12"
+                                TextBlock.FontWeight="Normal">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock  Text="No. of Payments= " />
+                                <TextBlock FontSize="12" FontWeight="Bold" Text="{Binding TotalNumberOfPayments}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="25,0">
+                                <TextBlock Text="Total Value= " />
+                                <TextBlock FontSize="12" FontWeight="Bold" Text="{Binding TotalValueOfPayments}"/>
+                                <TextBlock  Text=" Br" />
+                            </StackPanel>
+                            <!--<StackPanel Orientation="Horizontal" Margin="25,0">
+                            <TextBlock Text="Total Purchase Value= " />
+                            <TextBlock FontSize="12" FontWeight="Bold" Text="{Binding TotalValueOfPurchases}"/>
+                            <TextBlock  Text=" Br" />
+                        </StackPanel>-->
+                        </StackPanel>
+                    </Grid>
+
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
+

@@ -1,0 +1,38 @@
+﻿<Window x:Class="AMStock.WPF.Views.ReportViewerCommon"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:viewer="clr-namespace:SAPBusinessObjects.WPF.Viewer;assembly=SAPBusinessObjects.WPF.Viewer"
+        DataContext="{Binding ReportViewerCommon, Source={StaticResource Locator}}"    
+        Title="Reports" Width="940" Height="550" MinWidth="550" MinHeight="550" 
+        WindowState="Maximized" Icon="/AMStock.WPF;component/Resources/AppIcon.ico"  FontSize="13.333" FontFamily="./#Bookman Old Style" 
+        Loaded="Window_Loaded">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/MainSkin.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ListViewDictionary.xaml" />
+                <ResourceDictionary Source="/AMStock.WPF;component/Skins/ControlsDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid >
+        <Border Style="{StaticResource mainBorder}" CornerRadius="0">
+    <Grid>        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Button Content="Email Document!" Grid.Row="0" Width="200" 
+                Command="{Binding SendEmailCommand}"
+                Visibility="{Binding SendEmailCommandVisibility}"
+                HorizontalAlignment="Right"/>
+        
+        <viewer:CrystalReportsViewer Grid.Row="1"  HorizontalAlignment="Stretch" Name="CrvReportViewer" 
+                                        Margin="0" ShowToggleSidePanelButton="False"
+                                        VerticalAlignment="Stretch" ToggleSidePanel="None"/>
+        
+    </Grid>
+    </Border>
+    </Grid>
+</Window>

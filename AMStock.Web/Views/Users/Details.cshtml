@@ -1,0 +1,40 @@
+﻿@model AMStock.Core.Models.UserDTO
+
+@{
+    ViewBag.Title ="' " + @Model.UserName + "' user detail";
+}
+<div style="margin-top:40px;"> 
+    <h3>'@Model.UserName' Profile</h3>
+
+    <section class="login">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary()
+
+            <div class="form-inline">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.UserName)
+                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @readonly = "true" })
+                </div>
+           
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Email)
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                </div>
+    
+                <div class="form-group">
+                    @Html.LabelFor(m => m.FullName)
+                    @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+                </div>
+                
+                  <div class="form-group">
+                    @Html.Label(" ")
+                    @Html.CheckBox("Enabled", new { @class = "form-control" })
+                  </div>
+            </div>
+            <input type="submit" value="Save Changes" class="btn btn-lg btn-primary btn-lg" />
+        }
+
+    </section>
+</div>

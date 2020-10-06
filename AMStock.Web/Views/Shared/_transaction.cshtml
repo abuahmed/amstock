@@ -1,0 +1,106 @@
+﻿@model IEnumerable<AMStock.Core.Models.TransactionHeaderDTO>
+<div id="table_id">
+    <div id="spinner">
+    </div>
+
+    <div>
+        <span>@ViewData["TransactionSearch"]</span>
+    </div>
+    <div>
+        <p>(@ViewData["totalNumber"]) @ViewData["TransactionType"] (s) found</p>
+    </div>
+
+    <table class="table table-striped table-condensed table-hover">
+
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.SerialNumber) </th>
+            <th>Store Name</th>
+            <th>@Html.DisplayNameFor(model => model.TransactionDateString)</th>
+            <th >@Html.DisplayNameFor(model => model.TransactionNumber)</th>
+            <th>@ViewData["BussinessPartnerType"]</th>
+            <th class="hidden-phone">@Html.DisplayNameFor(model => model.StatusString)</th>
+            <th style="text-align: right;">@Html.DisplayNameFor(model => model.NoofItems)</th>
+            <th style="text-align: right;">@Html.DisplayNameFor(model => model.TotalDue)</th>
+            <th class="hidden-phone">@Html.DisplayNameFor(model => model.PaymentCompleted)</th>
+            <th style="text-align: center;" class="hidden-print hidden-phone"></th>
+        </tr>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.SerialNumber)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Warehouse.DisplayName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.TransactionDateString)</td>
+                    <td >
+                        @Html.ActionLink(@Html.DisplayFor(modelItem => item.TransactionNumber).ToString(), "Details","Transaction", new { id = item.Id, type = @ViewData["TranType"] }, null)
+                    </td>
+                    <td>
+                        @Html.ActionLink(@Html.DisplayFor(model => item.BusinessPartner.DisplayNameShort).ToString(), "Details", "BusinessPartner", new { id = item.BusinessPartnerId, type = @ViewData["BpType"] }, null)
+
+                    </td>
+                    <td class="hidden-phone">@Html.DisplayFor(modelItem => item.StatusString)</td>
+                    <td style="text-align: right;">@Html.DisplayFor(modelItem => item.NoofItems)</td>
+                    <td style="text-align: right;">@Html.DisplayFor(modelItem => item.TotalDue)</td>
+
+                    <td class="hidden-phone">@Html.DisplayFor(modelItem => item.PaymentCompleted)</td>
+
+                    <td style="text-align: center;" class="hidden-print hidden-phone">@Html.ActionLink("View Details", "Details","Transaction", new { id = item.Id, type = @ViewData["TranType"] }, new { @Class = "btn btn-primary" })</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+    
+    
+    <ul class="pager">
+        <li style="display:@ViewData["prevDisabled"]; " class="hidden-print">
+            @Ajax.ActionLink("← Previous", "Index", "Transaction", 
+                new {
+                    type=@ViewData["TranType"],
+                    warehouseId = @ViewData["WarehouseId"], 
+                    searchText = @ViewData["SearchText"], 
+                    page = @ViewData["Page"], 
+                    pageSize = @ViewData["PageSize"], 
+                    ptype = -1, 
+                    transactionType = @ViewData["TransactionStat"], 
+                    paymentStatus = @ViewData["PaymentStat"],
+                    beginDate=@ViewData["BeginDate"],
+                    endDate=@ViewData["EndDate"]
+                }, new AjaxOptions
+                {
+                    HttpMethod = "GET",
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "table_id",
+                    LoadingElementId = "spinner"
+                })
+        </li>
+        <li>
+            <span>Page @ViewData["Page"] of @ViewData["totalPages"] </span>
+        </li>
+        <li style="display:@ViewData["nextDisabled"]; " class="hidden-print">
+            @Ajax.ActionLink("Next →", "Index", "Transaction", 
+                new
+                {
+                    type=@ViewData["TranType"],
+                    warehouseId = @ViewData["WarehouseId"], 
+                    searchText = @ViewData["SearchText"], 
+                    page = @ViewData["Page"], 
+                    pageSize = @ViewData["PageSize"], 
+                    ptype = 1, 
+                    transactionType = @ViewData["TransactionStat"], 
+                    paymentStatus = @ViewData["PaymentStat"],
+                    beginDate=@ViewData["BeginDate"],
+                    endDate=@ViewData["EndDate"]
+                }, new AjaxOptions
+                {
+                    HttpMethod = "GET",
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "table_id",
+                    LoadingElementId = "spinner"
+                }, new { @style = "width: 106px;" })
+        </li>
+    </ul>
+    
+</div>

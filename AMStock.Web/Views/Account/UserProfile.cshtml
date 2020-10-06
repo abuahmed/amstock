@@ -1,0 +1,36 @@
+﻿@model AMStock.Core.Models.UserDTO
+@{    
+    ViewBag.Title = "My Profile";
+}
+
+<h3>@User.Identity.Name Profile</h3>
+
+<section class="login">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary()
+
+        <div class="form-inline">
+            <div class="form-group">
+                @Html.LabelFor(m => m.UserName)
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @readonly = "true" })
+            </div>
+        </div>        
+        <div class="form-inline">
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email)
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+            </div>
+        </div> 
+        <div class="form-inline">
+            <div class="form-group">
+                @Html.LabelFor(m => m.FullName)
+                @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+            </div>
+        </div>
+        <input type="submit" value="Save Changes" class="k-button" />
+    }
+
+</section>
+
